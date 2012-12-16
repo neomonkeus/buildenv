@@ -197,7 +197,7 @@ echo.  native: %ProgramFiles%
 echo.
 echo.Setting Architecture
 
-echo.Architecture: %_arch_type% bit
+echo.  Architecture: %_arch_type% bit
 
 :endsettings
 
@@ -211,26 +211,29 @@ echo.Setting Blender Environment
 
 if exist "%_blender%\blender.exe" set BLENDERHOME=%_blender%
 if "%BLENDERHOME%" == "" (
-  echo.Blender not found
+  echo.  Blender not found
   goto endblender
 )
-echo.Blender home: %BLENDERHOME%
+echo.  Blender home: %BLENDERHOME%
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67) do (
   if exist "%BLENDERHOME%\%%A" set BLENDERVERSION=%%A
 )
 if "%BLENDERVERSION%" == "" (
-  echo.Blender version not found
+  echo.  Blender version not found
   goto endblender
 )
-echo.Blender version: %BLENDERVERSION%
+echo.  Blender version: %BLENDERVERSION%
 if exist "%BLENDERHOME%\%BLENDERVERSION%\scripts\addons" set BLENDERADDONS=%BLENDERHOME%\%BLENDERVERSION%\scripts\addons
 if "%BLENDERADDONS%" == "" (
-  echo.Blender addons not found
+  echo.  Blender addons not found
   goto endblender
 )
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
-echo.Global Blender addons: %BLENDERADDONS%
-echo.Local Blender addons: %APPDATABLENDERADDONS%
+echo.
+echo.  Global Blender addons: 
+echo.  %BLENDERADDONS%
+echo.  Local Blender addons:
+echo.  %APPDATABLENDERADDONS%
 :endblender
 
 rem *************
@@ -244,10 +247,10 @@ if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
 if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
 if exist "%_seven_zip%\7z.exe" set SEVENZIPHOME=%_seven_zip%
 if "%SEVENZIPHOME%" == "" (
-  echo.7-Zip not found
+  echo.  7-Zip not found
   goto endsevenzip
 )
-echo.7-Zip home: %SEVENZIPHOME%
+echo.  7-Zip home: %SEVENZIPHOME%
 set PATH=%SEVENZIPHOME%;%PATH%
 :endsevenzip
 
@@ -263,10 +266,10 @@ if exist "%ProgramFiles32%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles32%\NSIS
 if exist "%ProgramFiles%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles%\NSIS
 if exist "%_nsis_path%\makensis.exe" set NSISHOME=%_nsis_path%
 if "%NSISHOME%" == "" (
-  echo.NSIS not found
+  echo.  NSIS not found
   goto endnsis
 )
-echo.NSIS home: %NSISHOME%
+echo.  NSIS home: %NSISHOME%
 set PATH=%NSISHOME%;%PATH%
 :endnsis
 
@@ -284,10 +287,10 @@ if exist "%LOCALAPPDATA%\GitHub" (
 )
 if exist "%_git_path%\bin\git.exe" set GITHOME=%_git_path%
 if "%GITHOME%" == "" (
-  echo.Git not found
+  echo.  Git not found
   goto endgit
 )
-echo.Git home: %GITHOME%
+echo.  Git home: %GITHOME%
 set PATH=%GITHOME%\bin;%PATH%
 :endgit
 
@@ -302,10 +305,10 @@ if exist "%ProgramFiles32%\CMake 2.8\bin\cmake.exe" set CMAKEHOME=%ProgramFiles3
 if exist "%ProgramFiles%\CMake 2.8\cmake.exe" set CMAKEHOME=%ProgramFiles%\CMake 2.8
 if exist "%_cmake%\bin\cmake.exe" set CMAKEHOME=%_cmake%
 if "%CMAKEHOME%" == "" (
-  echo.CMake not found
+  echo.  CMake not found
   goto endcmake
 )
-echo.CMake home: %CMAKEHOME%
+echo.  CMake home: %CMAKEHOME%
 set PATH=%CMAKEHOME%\bin;%PATH%
 :endcmake
 
@@ -318,10 +321,10 @@ echo.
 echo.Setting SWIG Environment
 if exist "%_swig%\swig.exe" set SWIGHOME=%_swig%
 if "%SWIGHOME%" == "" (
-  echo.SWIG not found
+  echo.  SWIG not found
   goto endswig
 )
-echo.SWIG home: %SWIGHOME%
+echo.  SWIG home: %SWIGHOME%
 set PATH=%SWIGHOME%;%PATH%
 :endswig
 
@@ -335,18 +338,18 @@ echo.Setting BOOST Environment
 
 if exist "%_boostinc%" set BOOST_INCLUDEDIR=%_boostinc% 
 if "%BOOST_INCLUDEDIR%" == "" (
-  echo.BOOST Include Directory not found
+  echo.  BOOST Include Directory not found
   goto endboost
 )
-echo.BOOST Include Directory: %BOOST_INCLUDEDIR%
+echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
 
 if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
 if "%BOOST_LIBRARYDIR%" == "" (
-  echo.BOOST Library not found
+  echo.  BOOST Library not found
   goto endboost
 )
 set PATH=%BOOST_LIBRARYDIR%;%PATH%
-echo.BOOST Library: %BOOST_LIBRARYDIR%
+echo.  BOOST Library: %BOOST_LIBRARYDIR%
 
 :endboost
 
@@ -383,33 +386,33 @@ rem 2. check for some standard file to ensure _qt_path actually contains the Qt 
 rem    (similar to NSIS, Git, and Python checks)
 if exist "%_qt_path%" set QTHOME=%_qt_path%
 if "%QTHOME%" == "" (
-    echo.Qt not found
+    echo.  Qt not found
     goto endqt
 )
-echo.Qt home: %QTHOME%
+echo.  Qt home: %QTHOME%
 for %%A in (4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Desktop\Qt\%%A" set QTVERSION=%%A
 )
 if "%QTVERSION%" == "" (
-  echo.Qt version not found
+  echo.  Qt version not found
   goto endqt
 )
 
-echo.Qt version: %QTVERSION%
+echo.  Qt version: %QTVERSION%
 
 if exist "%QTHOME%\Desktop\Qt\%QTVERSION%\mingw" (
 set QTDIR=%QTHOME%\Desktop\Qt\%QTVERSION%\mingw
 ) else (
-echo.Detection of Qt with non-mingw compilers not yet implemented.
-echo.Qt directory not set.
+echo.  Detection of Qt with non-mingw compilers not yet implemented.
+echo.  Qt directory not set.
 goto endqt
 )
 if "%QTDIR%" == "" (
-  echo.Qt directory not found
+  echo.  Qt directory not found
   goto endqt
 )
 rem PATH set later; see :mingw
-echo.Qt directory: %QTDIR%
+echo.  Qt directory: %QTDIR%
 
 :endqt
 
@@ -494,16 +497,16 @@ if "%QTDIR%" == "" goto mingw_standalone
 if not "%QTDIR%" == "" goto mingw_qt
 
 :mingwx64
-echo.Compiler not supported by buildenv.
+echo.  Compiler not supported by buildenv.
 goto endcompiler
 
 :mingw_standalone
 if exist "C:\mingw\bin" (
-  echo.Using standalone MinGW
+  echo.  Using standalone MinGW
   set PATH=C:\mingw\bin;%PATH%
   goto python_mingw
 ) else (
-  echo.MinGW not found
+  echo.  MinGW not found
   goto endcompiler
 )
 
@@ -515,8 +518,8 @@ goto python_mingw
 :python_msvc
 if exist %PYTHONFOLDER% (
 echo.Setting python compiler for msvc.
-echo.[build]> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
-echo.compiler=msvc>> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
+echo.  [build]> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
+echo.  compiler=msvc>> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
 )
 goto endcompiler
 
@@ -524,26 +527,28 @@ goto endcompiler
 :python_mingw
 if exist %PYTHONFOLDER% (
 echo.Setting python compiler for mingw32.
-echo.[build]> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
-echo.compiler=mingw32>> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
+echo.  [build]> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
+echo.  compiler=mingw32>> "%PYTHONFOLDER%\Lib\distutils\distutils.cfg"
 )
 goto endcompiler
 
 :compilernotfound
-echo.Compiler not found
+echo.  Compiler not found
 
 :endcompiler
 
 :workfolder
 if exist "%HOMEDRIVE%%HOMEPATH%\%_work_folder%" set _work_folder=%HOMEDRIVE%%HOMEPATH%\%_work_folder%
 echo.
-echo.Changing to directory: %_work_folder%
+echo.Changing to directory: 
+echo.%_work_folder%
+echo.
 if not exist "%_work_folder%" goto workfoldernotfound
 cd /d "%_work_folder%"
 goto endworkfolder
 
 :workfoldernotfound
-echo.Directory not found.
+echo.  Directory not found.
 
 :endworkfolder
 
