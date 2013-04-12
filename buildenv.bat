@@ -100,19 +100,15 @@ echo.  blender=FOLDER          [default: %_blender%]
 rem Utilities
 echo.Utilities:
 echo.  git=FOLDER              [default: %_git_path%]
-
 echo.  nsis=FOLDER             [default: %_nsis_path%]
-
 echo.  cmake=FOLDER            [default: %_cmake%]
-
 echo.  seven_zip=FOLDER        [default: %_seven_zip%]
+echo.  pydev_debug=FOLDER	   [default: %_pydev_debug%]
 
 rem compilers
 echo.Compilers:
 echo.  compiler=COMPILER       [default: %_compiler_type%]
-
 echo.  msvc2008=FOLDER         [default: %_msvc2008%]
-
 echo.  msvc2010=FOLDER         [default: %_msvc2010%]
 
 rem ms_sdk
@@ -167,6 +163,7 @@ if "%SWITCH%" == "git" set _git_path=%VALUE%
 if "%SWITCH%" == "nsis" set _nsis_path=%VALUE%
 if "%SWITCH%" == "cmake" set _cmake=%VALUE%
 if "%SWITCH%" == "seven_zip" set _seven_zip=%VALUE%
+if "%SWITCH%" == "pydev_debug" set _pydev_debug=%VALUE%
 
 rem compilers
 if "%SWITCH%" == "compiler" set _compiler_type=%VALUE%
