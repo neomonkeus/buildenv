@@ -180,11 +180,13 @@ rem also add boostlib to path so dlls are found
 if "%SWITCH%" == "boostlib" set _boostlib=%VALUE%
 goto eof
 
-:settings
+
 rem ********************
 rem *** Architecture ***
 rem ********************
 
+
+:settings
 echo.
 echo.Script Running:
 echo.
@@ -205,9 +207,36 @@ echo.  Architecture: %_arch_type% bit
 
 :endsettings
 
-rem ***************
-rem *** Blender ***
-rem ***************
+
+rem *****************
+rem *** Languages ***
+rem *****************
+
+
+:python
+echo.
+echo.Setting Python Environment
+if exist "%_python_path%\python.exe" goto pythonfound
+goto pythonnotfound
+
+:pythonfound
+set PATH=%_python_path%;%_python_path%\Scripts;%PATH%
+rem PYTHONPATH has another purpose, so use PYTHONFOLDER
+rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
+set PYTHONFOLDER=%_python_path%
+python -c "import sys; print(sys.version)"
+goto qt
+:endpythonfound
+
+:pythonnotfound
+echo.Python not found
+:endpythonnotfound
+
+
+rem ****************
+rem *** Programs ***
+rem ****************
+
 
 :blender
 echo.
@@ -240,46 +269,11 @@ echo.  Local Blender addons:
 echo.  %APPDATABLENDERADDONS%
 :endblender
 
-rem *************
-rem *** 7-Zip ***
-rem *************
 
-:sevenzip
-echo.
-echo.Setting 7-Zip Environment
-if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
-if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
-if exist "%_seven_zip%\7z.exe" set SEVENZIPHOME=%_seven_zip%
-if "%SEVENZIPHOME%" == "" (
-  echo.  7-Zip not found
-  goto endsevenzip
-)
-echo.  7-Zip home: %SEVENZIPHOME%
-set PATH=%SEVENZIPHOME%;%PATH%
-:endsevenzip
+rem *****************
+rem *** Utilities ***
+rem *****************
 
-
-rem ************
-rem *** NSIS ***
-rem ************
-
-:nsis
-echo.
-echo.Setting NSIS Environment
-if exist "%ProgramFiles32%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles32%\NSIS
-if exist "%ProgramFiles%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles%\NSIS
-if exist "%_nsis_path%\makensis.exe" set NSISHOME=%_nsis_path%
-if "%NSISHOME%" == "" (
-  echo.  NSIS not found
-  goto endnsis
-)
-echo.  NSIS home: %NSISHOME%
-set PATH=%NSISHOME%;%PATH%
-:endnsis
-
-rem ***********
-rem *** Git ***
-rem ***********
 
 :git
 echo.
@@ -298,9 +292,19 @@ echo.  Git home: %GITHOME%
 set PATH=%GITHOME%\bin;%PATH%
 :endgit
 
-rem *************
-rem *** CMake ***
-rem *************
+:nsis
+echo.
+echo.Setting NSIS Environment
+if exist "%ProgramFiles32%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles32%\NSIS
+if exist "%ProgramFiles%\NSIS\makensis.exe" set NSISHOME=%ProgramFiles%\NSIS
+if exist "%_nsis_path%\makensis.exe" set NSISHOME=%_nsis_path%
+if "%NSISHOME%" == "" (
+  echo.  NSIS not found
+  goto endnsis
+)
+echo.  NSIS home: %NSISHOME%
+set PATH=%NSISHOME%;%PATH%
+:endnsis
 
 :cmake
 echo.
@@ -316,70 +320,24 @@ echo.  CMake home: %CMAKEHOME%
 set PATH=%CMAKEHOME%\bin;%PATH%
 :endcmake
 
-rem *************
-rem *** SWIG ***
-rem *************
-
-:swig
+:sevenzip
 echo.
-echo.Setting SWIG Environment
-if exist "%_swig%\swig.exe" set SWIGHOME=%_swig%
-if "%SWIGHOME%" == "" (
-  echo.  SWIG not found
-  goto endswig
+echo.Setting 7-Zip Environment
+if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
+if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
+if exist "%_seven_zip%\7z.exe" set SEVENZIPHOME=%_seven_zip%
+if "%SEVENZIPHOME%" == "" (
+  echo.  7-Zip not found
+  goto endsevenzip
 )
-echo.  SWIG home: %SWIGHOME%
-set PATH=%SWIGHOME%;%PATH%
-:endswig
-
-rem *************
-rem *** BOOST ***
-rem *************
-
-:boost
-echo.
-echo.Setting BOOST Environment
-
-if exist "%_boostinc%" set BOOST_INCLUDEDIR=%_boostinc% 
-if "%BOOST_INCLUDEDIR%" == "" (
-  echo.  BOOST Include Directory not found
-  goto endboost
-)
-echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
-
-if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
-if "%BOOST_LIBRARYDIR%" == "" (
-  echo.  BOOST Library not found
-  goto endboost
-)
-set PATH=%BOOST_LIBRARYDIR%;%PATH%
-echo.  BOOST Library: %BOOST_LIBRARYDIR%
-
-:endboost
-
-rem **********
-rem *** Qt ***
-rem **********
+echo.  7-Zip home: %SEVENZIPHOME%
+set PATH=%SEVENZIPHOME%;%PATH%
+:endsevenzip
 
 
-:python
-echo.
-echo.Setting Python Environment
-if exist "%_python_path%\python.exe" goto pythonfound
-goto pythonnotfound
-
-:pythonfound
-set PATH=%_python_path%;%_python_path%\Scripts;%PATH%
-rem PYTHONPATH has another purpose, so use PYTHONFOLDER
-rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
-set PYTHONFOLDER=%_python_path%
-python -c "import sys; print(sys.version)"
-goto qt
-:endpythonfound
-
-:pythonnotfound
-echo.Python not found
-:endpythonnotfound
+rem *****************
+rem *** Libraries ***
+rem *****************
 
 
 :qt
@@ -419,6 +377,42 @@ rem PATH set later; see :mingw
 echo.  Qt directory: %QTDIR%
 
 :endqt
+
+
+:swig
+
+echo.
+echo.Setting SWIG Environment
+if exist "%_swig%\swig.exe" set SWIGHOME=%_swig%
+if "%SWIGHOME%" == "" (
+  echo.  SWIG not found
+  goto endswig
+)
+echo.  SWIG home: %SWIGHOME%
+set PATH=%SWIGHOME%;%PATH%
+:endswig
+
+
+:boost
+echo.
+echo.Setting BOOST Environment
+
+if exist "%_boostinc%" set BOOST_INCLUDEDIR=%_boostinc% 
+if "%BOOST_INCLUDEDIR%" == "" (
+  echo.  BOOST Include Directory not found
+  goto endboost
+)
+echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
+
+if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
+if "%BOOST_LIBRARYDIR%" == "" (
+  echo.  BOOST Library not found
+  goto endboost
+)
+set PATH=%BOOST_LIBRARYDIR%;%PATH%
+echo.  BOOST Library: %BOOST_LIBRARYDIR%
+
+:endboost
 
 rem ***************
 rem ** Compilers **
@@ -541,6 +535,11 @@ echo.  Compiler not found
 
 :endcompiler
 
+
+rem **************
+rem ** Start-Up **
+rem **************
+
 :workfolder
 if exist "%HOMEDRIVE%%HOMEPATH%\%_work_folder%" set _work_folder=%HOMEDRIVE%%HOMEPATH%\%_work_folder%
 echo.
@@ -582,6 +581,7 @@ set _git_path=
 set _nsis_path=
 set _seven_zip=
 set _cmake=
+set _pydev_debug=
 
 set _qt_path=
 set _swig=
