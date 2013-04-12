@@ -225,7 +225,6 @@ rem PYTHONPATH has another purpose, so use PYTHONFOLDER
 rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 python -c "import sys; print(sys.version)"
-goto qt
 :endpythonfound
 
 :pythonnotfound
