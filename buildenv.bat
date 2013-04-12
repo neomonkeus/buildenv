@@ -152,24 +152,30 @@ set SWITCH=%SWITCH:"=%
 set VALUE=%VALUE:"=%
 echo.Parsing %SWITCH%=%VALUE%
 
+rem Misc
 if "%SWITCH%" == "start" set _work_folder=%VALUE%
 if "%SWITCH%" == "arch" set _arch_type=%VALUE%
 
+rem Lang
+if "%SWITCH%" == "python" set _python_path=%VALUE%
+
+rem Progs
+if "%SWITCH%" == "blender" set _blender=%VALUE%
+
+rem Utilities
+if "%SWITCH%" == "git" set _git_path=%VALUE%
+if "%SWITCH%" == "nsis" set _nsis_path=%VALUE%
+if "%SWITCH%" == "cmake" set _cmake=%VALUE%
+if "%SWITCH%" == "seven_zip" set _seven_zip=%VALUE%
+
+rem compilers
 if "%SWITCH%" == "compiler" set _compiler_type=%VALUE%
 if "%SWITCH%" == "msvc2008" set _msvc2008=%VALUE%
 if "%SWITCH%" == "msvc2008" set _compiler_type=msvc2008
 if "%SWITCH%" == "msvc2010" set _msvc2010=%VALUE%
 if "%SWITCH%" == "msvc2010" set _compiler_type=msvc2010
 
-if "%SWITCH%" == "python" set _python_path=%VALUE%
-
-if "%SWITCH%" == "blender" set _blender=%VALUE%
-
-if "%SWITCH%" == "git" set _git_path=%VALUE%
-if "%SWITCH%" == "nsis" set _nsis_path=%VALUE%
-if "%SWITCH%" == "cmake" set _cmake=%VALUE%
-if "%SWITCH%" == "seven_zip" set _seven_zip=%VALUE%
-
+rem libs
 if "%SWITCH%" == "qt" set _qt_path=%VALUE%
 if "%SWITCH%" == "swig" set _swig=%VALUE%
 if "%SWITCH%" == "boostinc" set _boostinc=%VALUE%
