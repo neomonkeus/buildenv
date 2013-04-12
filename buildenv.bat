@@ -246,6 +246,7 @@ if "%BLENDERHOME%" == "" (
   echo.  Blender not found
   goto endblender
 )
+set PATH="%_blender%";%PATH%
 echo.  Blender home: %BLENDERHOME%
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67) do (
   if exist "%BLENDERHOME%\%%A" set BLENDERVERSION=%%A
@@ -266,6 +267,7 @@ echo.  Global Blender addons:
 echo.  %BLENDERADDONS%
 echo.  Local Blender addons:
 echo.  %APPDATABLENDERADDONS%
+
 :endblender
 
 
@@ -331,7 +333,22 @@ if "%SEVENZIPHOME%" == "" (
 )
 echo.  7-Zip home: %SEVENZIPHOME%
 set PATH=%SEVENZIPHOME%;%PATH%
+
 :endsevenzip
+
+:pydevdebug
+
+echo.
+echo.Setting PyDev Debug Environment
+if exist "%_pydev_debug%" set PYDEVDEBUG=%_pydev_debug%
+if "%PYDEVDEBUG%" == "" (
+  echo.  Pydev Debug not found
+  goto endpydevdebug
+)
+echo.  PyDev Debug home: %PYDEVDEBUG%
+set PATH=%PYDEVDEBUG%;%PATH%
+
+:endpydevdebug
 
 
 rem *****************
