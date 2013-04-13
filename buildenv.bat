@@ -340,13 +340,14 @@ set PATH=%SEVENZIPHOME%;%PATH%
 
 echo.
 echo.Setting PyDev Debug Environment
-if exist "%_pydev_debug%" set PYDEVDEBUG=%_pydev_debug%
+if exist "%_pydev_debug%" (
+set PYDEVDEBUG=%_pydev_debug%
+)
 if "%PYDEVDEBUG%" == "" (
   echo.  Pydev Debug not found
   goto endpydevdebug
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
-set PATH=%PYDEVDEBUG%;%PATH%
 
 :endpydevdebug
 
