@@ -70,6 +70,9 @@ cmake=FOLDER
 seven_zip=FOLDER
   the base FOLDER of your 7-zip installation;
   
+pydev_debug=FOLDER
+  the base FOLDER for the python debugger hook;
+  
 Compilers
 ---------
 
