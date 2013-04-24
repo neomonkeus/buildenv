@@ -138,6 +138,20 @@ if not exist "%~f1" (
   goto end
 )
 for /F "tokens=* delims=" %%a in ('type %1') do call :parseparam "%%a"
+
+rem check param2 passed in
+if "%~f2" == "" (
+goto settings
+)
+rem check file exists
+if not exist "%~f2" (
+echo.CI Properties File "%~f2" not found.
+goto settings
+)
+
+rem set env var & empty prop files
+set _ci_propfile=%~f2 
+echo.> %_ci_propfile%
 goto settings
 
 :parseparam
@@ -205,8 +219,11 @@ echo.
 echo.Setting Architecture
 
 echo.  Architecture: %_arch_type% bit
+)
+
 
 :endsettings
+
 
 rem *****************
 rem *** Languages ***
@@ -228,6 +245,11 @@ rem PYTHONPATH has another purpose, so use PYTHONFOLDER
 rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 python -c "import sys; print(sys.version)"
+
+if not "%_ci_propfile%" == "" ( 
+echo.PYTHONFOLDER=%PYTHONFOLDER% >> %~f2
+)
+
 :endpython
 
 
@@ -580,6 +602,7 @@ rem **************
 set ProgramFiles32=
 set _work_folder=
 set _arch_type=
+set _ci_propfile=
 
 set _compiler_type=
 set _msvc2008=
