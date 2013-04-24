@@ -130,6 +130,7 @@ rem Likely, the script was run from Windows explorer...
 pause
 goto end
 
+
 :checkparams
 rem Search the INI file line by line
 if not exist "%~f1" (
@@ -207,7 +208,6 @@ echo.  Architecture: %_arch_type% bit
 
 :endsettings
 
-
 rem *****************
 rem *** Languages ***
 rem *****************
@@ -216,8 +216,11 @@ rem *****************
 :python
 echo.
 echo.Setting Python Environment
-if exist "%_python_path%\python.exe" goto pythonfound
-goto pythonnotfound
+if exist "%_python_path%\python.exe" ( 
+goto pythonfound 
+)
+echo.Python not found
+goto endpython
 
 :pythonfound
 set PATH=%_python_path%;%_python_path%\Scripts;%PATH%
@@ -225,11 +228,7 @@ rem PYTHONPATH has another purpose, so use PYTHONFOLDER
 rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 python -c "import sys; print(sys.version)"
-:endpythonfound
-
-:pythonnotfound
-echo.Python not found
-:endpythonnotfound
+:endpython
 
 
 rem ****************
