@@ -131,7 +131,9 @@ rem Likely, the script was run from Windows explorer...
 pause
 goto end
 
+:checkparams
 for /F "tokens=* delims=" %%a in ('type %1') do call :parseparam "%%a"
+goto settings
 
 :parseparam
 rem Get switch and value, and remove surrounding quotes.
@@ -201,8 +203,10 @@ echo.Setting Architecture
 echo.  Architecture: %_arch_type% bit
 )
 
-if exist %_ci_prop_file% (
-echo.> %_ci_propfile%
+echo. %_ci_prop_file%
+
+if exist "%_ci_prop_file%" (
+echo.> %_ci_prop_file%
 )
 
 :endsettings
