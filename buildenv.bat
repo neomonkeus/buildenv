@@ -309,6 +309,11 @@ if "%GITHOME%" == "" (
 )
 echo.  Git home: %GITHOME%
 set PATH=%GITHOME%\bin;%PATH%
+
+if exist %_ci_prop_file% (
+echo.GITHOME="%GITHOME%" >> %_ci_prop_file% 
+)
+
 :endgit
 
 :nsis
@@ -323,6 +328,9 @@ if "%NSISHOME%" == "" (
 )
 echo.  NSIS home: %NSISHOME%
 set PATH=%NSISHOME%;%PATH%
+if exist %_ci_prop_file% (
+echo.NSISHOME=%NSISHOME% >> %_ci_prop_file% 
+)
 :endnsis
 
 :cmake
@@ -337,6 +345,10 @@ if "%CMAKEHOME%" == "" (
 )
 echo.  CMake home: %CMAKEHOME%
 set PATH=%CMAKEHOME%\bin;%PATH%
+if exist %_ci_prop_file% (
+echo.CMAKEHOME=%CMAKEHOME% >> %_ci_prop_file% 
+)
+
 :endcmake
 
 :sevenzip
