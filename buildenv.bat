@@ -253,7 +253,11 @@ if "%BLENDERHOME%" == "" (
   goto endblender
 )
 set PATH="%_blender%";%PATH%
+if exist %_ci_prop_file% (
+echo.BLENDERHOME=%BLENDERHOME% >> %_ci_prop_file% 
+)
 echo.  Blender home: %BLENDERHOME%
+
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67) do (
   if exist "%BLENDERHOME%\%%A" set BLENDERVERSION=%%A
 )
@@ -261,13 +265,21 @@ if "%BLENDERVERSION%" == "" (
   echo.  Blender version not found
   goto endblender
 )
+if exist %_ci_prop_file% (
+echo.BLENDERVERSION=%BLENDERVERSION% >> %_ci_prop_file%
+)
 echo.  Blender version: %BLENDERVERSION%
+
 if exist "%BLENDERHOME%\%BLENDERVERSION%\scripts\addons" set BLENDERADDONS=%BLENDERHOME%\%BLENDERVERSION%\scripts\addons
 if "%BLENDERADDONS%" == "" (
   echo.  Blender addons not found
   goto endblender
 )
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
+if exist %_ci_prop_file% (
+echo.BLENDERADDONS=%BLENDERADDONS% >> %_ci_prop_file% 
+echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >> %_ci_prop_file% 
+)
 echo.
 echo.  Global Blender addons: 
 echo.  %BLENDERADDONS%
