@@ -203,8 +203,6 @@ echo.Setting Architecture
 echo.  Architecture: %_arch_type% bit
 )
 
-echo. %_ci_prop_file%
-
 if exist "%_ci_prop_file%" (
 echo.> %_ci_prop_file%
 )
