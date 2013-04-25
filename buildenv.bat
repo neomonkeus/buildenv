@@ -88,6 +88,7 @@ echo.Auto-detected Locations:
 rem Misc
 echo.  start=FOLDER            [default: %_work_folder%]
 echo.  arch=BITS               [default: %_arch_type%]
+echo.  ci_output=FILE		   [default: %_ci_prop_file%]
 
 rem Lang
 echo.Languages:
@@ -130,29 +131,7 @@ rem Likely, the script was run from Windows explorer...
 pause
 goto end
 
-
-:checkparams
-rem Search the INI file line by line
-if not exist "%~f1" (
-  echo.File "%~f1" not found.
-  goto end
-)
 for /F "tokens=* delims=" %%a in ('type %1') do call :parseparam "%%a"
-
-rem check param2 passed in
-if "%~f2" == "" (
-goto settings
-)
-rem check file exists
-if not exist "%~f2" (
-echo.CI Properties File "%~f2" not found.
-goto settings
-)
-
-rem set env var & empty prop files
-set _ci_propfile=%~f2 
-echo.> %_ci_propfile%
-goto settings
 
 :parseparam
 rem Get switch and value, and remove surrounding quotes.
@@ -166,6 +145,7 @@ echo.Parsing %SWITCH%=%VALUE%
 rem Misc
 if "%SWITCH%" == "start" set _work_folder=%VALUE%
 if "%SWITCH%" == "arch" set _arch_type=%VALUE%
+if "%SWITCH%" == "ci_output" set _ci_prop_file=%VALUE%
 
 rem Lang
 if "%SWITCH%" == "python" set _python_path=%VALUE%
@@ -221,6 +201,9 @@ echo.Setting Architecture
 echo.  Architecture: %_arch_type% bit
 )
 
+if exist %_ci_prop_file% (
+echo.> %_ci_propfile%
+)
 
 :endsettings
 
@@ -246,8 +229,8 @@ rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 python -c "import sys; print(sys.version)"
 
-if not "%_ci_propfile%" == "" ( 
-echo.PYTHONFOLDER=%PYTHONFOLDER% >> %~f2
+if exist %_ci_prop_file% (
+echo.PYTHONFOLDER=%PYTHONFOLDER% >> %_ci_prop_file%
 )
 
 :endpython
@@ -602,7 +585,7 @@ rem **************
 set ProgramFiles32=
 set _work_folder=
 set _arch_type=
-set _ci_propfile=
+set _ci_prop_file=
 
 set _compiler_type=
 set _msvc2008=
