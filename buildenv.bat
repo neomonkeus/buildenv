@@ -363,7 +363,9 @@ if "%SEVENZIPHOME%" == "" (
 )
 echo.  7-Zip home: %SEVENZIPHOME%
 set PATH=%SEVENZIPHOME%;%PATH%
-
+if exist %_ci_prop_file% (
+echo.SEVENZIPHOME=%SEVENZIPHOME% >> %_ci_prop_file% 
+)
 :endsevenzip
 
 :pydevdebug
