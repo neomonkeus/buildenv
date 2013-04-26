@@ -466,6 +466,9 @@ if "%BOOST_INCLUDEDIR%" == "" (
   goto endboost
 )
 echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
+if exist %_ci_prop_file% (
+echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >> %_ci_prop_file%
+)
 
 if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
 if "%BOOST_LIBRARYDIR%" == "" (
@@ -474,12 +477,16 @@ if "%BOOST_LIBRARYDIR%" == "" (
 )
 set PATH=%BOOST_LIBRARYDIR%;%PATH%
 echo.  BOOST Library: %BOOST_LIBRARYDIR%
-
+if exist %_ci_prop_file% (
+echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >> %_ci_prop_file%
+)
 :endboost
+
 
 rem ***************
 rem ** Compilers **
 rem ***************
+
 
 :compilers
 echo.
