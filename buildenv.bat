@@ -380,7 +380,9 @@ if "%PYDEVDEBUG%" == "" (
   goto endpydevdebug
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
-
+if exist %_ci_prop_file% (
+echo.PYDEVDEBUG=%PYDEVDEBUG% >> %_ci_prop_file% 
+)
 :endpydevdebug
 
 
