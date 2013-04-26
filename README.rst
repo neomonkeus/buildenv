@@ -39,6 +39,9 @@ start=FOLDER
 
 arch=BITS
   target BITS architecture: 32, or 64
+  
+ci_output=FILE
+  used to output all the environmental variables to a file used for CI building.
 
 Languages
 ---------
