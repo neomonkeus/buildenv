@@ -241,7 +241,7 @@ Supported versions of 7-Zip
 Supported versions of CMake
 ---------------------------
 
-* Only tested with CMake 2.8.9.
+* Auto-detects CMake 2.8 or user defined.
 
 Supported versions of SWIG
 --------------------------
