@@ -403,6 +403,10 @@ if "%QTHOME%" == "" (
     goto endqt
 )
 echo.  Qt home: %QTHOME%
+if exist %_ci_prop_file% (
+echo.QTHOME=%QTHOME% >> %_ci_prop_file% 
+)
+
 for %%A in (4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Desktop\Qt\%%A" set QTVERSION=%%A
 )
@@ -412,6 +416,9 @@ if "%QTVERSION%" == "" (
 )
 
 echo.  Qt version: %QTVERSION%
+if exist %_ci_prop_file% (
+echo.QTVERSION=%QTVERSION% >> %_ci_prop_file% 
+)
 
 if exist "%QTHOME%\Desktop\Qt\%QTVERSION%\mingw" (
 set QTDIR=%QTHOME%\Desktop\Qt\%QTVERSION%\mingw
@@ -426,7 +433,9 @@ if "%QTDIR%" == "" (
 )
 rem PATH set later; see :mingw
 echo.  Qt directory: %QTDIR%
-
+if exist %_ci_prop_file% (
+echo.QTDIR=%QTDIR% >> %_ci_prop_file%
+)
 :endqt
 
 
