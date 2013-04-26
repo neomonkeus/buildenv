@@ -450,6 +450,9 @@ if "%SWIGHOME%" == "" (
 )
 echo.  SWIG home: %SWIGHOME%
 set PATH=%SWIGHOME%;%PATH%
+if exist %_ci_prop_file% (
+echo.SWIGHOME=%SWIGHOME% >> %_ci_prop_file%
+)
 :endswig
 
 
