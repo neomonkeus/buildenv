@@ -88,6 +88,7 @@ echo.Auto-detected Locations:
 rem Misc
 echo.  start=FOLDER            [default: %_work_folder%]
 echo.  arch=BITS               [default: %_arch_type%]
+echo.  ci_output=FILE		   [default: %_ci_prop_file%]
 
 rem Lang
 echo.Languages:
@@ -131,11 +132,6 @@ pause
 goto end
 
 :checkparams
-rem Search the INI file line by line
-if not exist "%~f1" (
-  echo.File "%~f1" not found.
-  goto end
-)
 for /F "tokens=* delims=" %%a in ('type %1') do call :parseparam "%%a"
 goto settings
 
@@ -151,6 +147,7 @@ echo.Parsing %SWITCH%=%VALUE%
 rem Misc
 if "%SWITCH%" == "start" set _work_folder=%VALUE%
 if "%SWITCH%" == "arch" set _arch_type=%VALUE%
+if "%SWITCH%" == "ci_output" set _ci_prop_file=%VALUE%
 
 rem Lang
 if "%SWITCH%" == "python" set _python_path=%VALUE%
@@ -204,6 +201,11 @@ echo.
 echo.Setting Architecture
 
 echo.  Architecture: %_arch_type% bit
+)
+
+if exist "%_ci_prop_file%" (
+echo.> %_ci_prop_file%
+)
 
 :endsettings
 
@@ -216,8 +218,11 @@ rem *****************
 :python
 echo.
 echo.Setting Python Environment
-if exist "%_python_path%\python.exe" goto pythonfound
-goto pythonnotfound
+if exist "%_python_path%\python.exe" ( 
+goto pythonfound 
+)
+echo.Python not found
+goto endpython
 
 :pythonfound
 set PATH=%_python_path%;%_python_path%\Scripts;%PATH%
@@ -225,11 +230,12 @@ rem PYTHONPATH has another purpose, so use PYTHONFOLDER
 rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 python -c "import sys; print(sys.version)"
-:endpythonfound
 
-:pythonnotfound
-echo.Python not found
-:endpythonnotfound
+if exist %_ci_prop_file% (
+echo.PYTHONFOLDER=%PYTHONFOLDER% >> %_ci_prop_file%
+)
+
+:endpython
 
 
 rem ****************
@@ -247,7 +253,11 @@ if "%BLENDERHOME%" == "" (
   goto endblender
 )
 set PATH="%_blender%";%PATH%
+if exist %_ci_prop_file% (
+echo.BLENDERHOME=%BLENDERHOME% >> %_ci_prop_file% 
+)
 echo.  Blender home: %BLENDERHOME%
+
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67) do (
   if exist "%BLENDERHOME%\%%A" set BLENDERVERSION=%%A
 )
@@ -255,13 +265,21 @@ if "%BLENDERVERSION%" == "" (
   echo.  Blender version not found
   goto endblender
 )
+if exist %_ci_prop_file% (
+echo.BLENDERVERSION=%BLENDERVERSION% >> %_ci_prop_file%
+)
 echo.  Blender version: %BLENDERVERSION%
+
 if exist "%BLENDERHOME%\%BLENDERVERSION%\scripts\addons" set BLENDERADDONS=%BLENDERHOME%\%BLENDERVERSION%\scripts\addons
 if "%BLENDERADDONS%" == "" (
   echo.  Blender addons not found
   goto endblender
 )
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
+if exist %_ci_prop_file% (
+echo.BLENDERADDONS=%BLENDERADDONS% >> %_ci_prop_file% 
+echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >> %_ci_prop_file% 
+)
 echo.
 echo.  Global Blender addons: 
 echo.  %BLENDERADDONS%
@@ -291,6 +309,11 @@ if "%GITHOME%" == "" (
 )
 echo.  Git home: %GITHOME%
 set PATH=%GITHOME%\bin;%PATH%
+
+if exist %_ci_prop_file% (
+echo.GITHOME="%GITHOME%" >> %_ci_prop_file% 
+)
+
 :endgit
 
 :nsis
@@ -305,6 +328,9 @@ if "%NSISHOME%" == "" (
 )
 echo.  NSIS home: %NSISHOME%
 set PATH=%NSISHOME%;%PATH%
+if exist %_ci_prop_file% (
+echo.NSISHOME=%NSISHOME% >> %_ci_prop_file% 
+)
 :endnsis
 
 :cmake
@@ -319,6 +345,10 @@ if "%CMAKEHOME%" == "" (
 )
 echo.  CMake home: %CMAKEHOME%
 set PATH=%CMAKEHOME%\bin;%PATH%
+if exist %_ci_prop_file% (
+echo.CMAKEHOME=%CMAKEHOME% >> %_ci_prop_file% 
+)
+
 :endcmake
 
 :sevenzip
@@ -333,7 +363,9 @@ if "%SEVENZIPHOME%" == "" (
 )
 echo.  7-Zip home: %SEVENZIPHOME%
 set PATH=%SEVENZIPHOME%;%PATH%
-
+if exist %_ci_prop_file% (
+echo.SEVENZIPHOME=%SEVENZIPHOME% >> %_ci_prop_file% 
+)
 :endsevenzip
 
 :pydevdebug
@@ -348,7 +380,9 @@ if "%PYDEVDEBUG%" == "" (
   goto endpydevdebug
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
-
+if exist %_ci_prop_file% (
+echo.PYDEVDEBUG=%PYDEVDEBUG% >> %_ci_prop_file% 
+)
 :endpydevdebug
 
 
@@ -369,6 +403,10 @@ if "%QTHOME%" == "" (
     goto endqt
 )
 echo.  Qt home: %QTHOME%
+if exist %_ci_prop_file% (
+echo.QTHOME=%QTHOME% >> %_ci_prop_file% 
+)
+
 for %%A in (4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Desktop\Qt\%%A" set QTVERSION=%%A
 )
@@ -378,6 +416,9 @@ if "%QTVERSION%" == "" (
 )
 
 echo.  Qt version: %QTVERSION%
+if exist %_ci_prop_file% (
+echo.QTVERSION=%QTVERSION% >> %_ci_prop_file% 
+)
 
 if exist "%QTHOME%\Desktop\Qt\%QTVERSION%\mingw" (
 set QTDIR=%QTHOME%\Desktop\Qt\%QTVERSION%\mingw
@@ -392,7 +433,9 @@ if "%QTDIR%" == "" (
 )
 rem PATH set later; see :mingw
 echo.  Qt directory: %QTDIR%
-
+if exist %_ci_prop_file% (
+echo.QTDIR=%QTDIR% >> %_ci_prop_file%
+)
 :endqt
 
 
@@ -407,6 +450,9 @@ if "%SWIGHOME%" == "" (
 )
 echo.  SWIG home: %SWIGHOME%
 set PATH=%SWIGHOME%;%PATH%
+if exist %_ci_prop_file% (
+echo.SWIGHOME=%SWIGHOME% >> %_ci_prop_file%
+)
 :endswig
 
 
@@ -420,6 +466,9 @@ if "%BOOST_INCLUDEDIR%" == "" (
   goto endboost
 )
 echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
+if exist %_ci_prop_file% (
+echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >> %_ci_prop_file%
+)
 
 if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
 if "%BOOST_LIBRARYDIR%" == "" (
@@ -428,12 +477,16 @@ if "%BOOST_LIBRARYDIR%" == "" (
 )
 set PATH=%BOOST_LIBRARYDIR%;%PATH%
 echo.  BOOST Library: %BOOST_LIBRARYDIR%
-
+if exist %_ci_prop_file% (
+echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >> %_ci_prop_file%
+)
 :endboost
+
 
 rem ***************
 rem ** Compilers **
 rem ***************
+
 
 :compilers
 echo.
@@ -581,6 +634,7 @@ rem **************
 set ProgramFiles32=
 set _work_folder=
 set _arch_type=
+set _ci_prop_file=
 
 set _compiler_type=
 set _msvc2008=

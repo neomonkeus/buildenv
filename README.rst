@@ -39,6 +39,9 @@ start=FOLDER
 
 arch=BITS
   target BITS architecture: 32, or 64
+  
+ci_output=FILE
+  used to output all the environmental variables to a file used for CI building.
 
 Languages
 ---------
@@ -241,7 +244,7 @@ Supported versions of 7-Zip
 Supported versions of CMake
 ---------------------------
 
-* Only tested with CMake 2.8.9.
+* Auto-detects CMake 2.8 or user defined.
 
 Supported versions of SWIG
 --------------------------
