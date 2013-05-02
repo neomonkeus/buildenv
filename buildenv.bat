@@ -225,11 +225,11 @@ echo.Python not found
 goto endpython
 
 :pythonfound
-set PATH=%_python_path%;%_python_path%\Scripts;%PATH%
+set _path=%_python_path%;%_python_path%\Scripts;%_path%
 rem PYTHONPATH has another purpose, so use PYTHONFOLDER
 rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
-python -c "import sys; print(sys.version)"
+%_python_path%\python.exe -c "import sys; print(""  ""+sys.version)"
 
 if exist %_ci_prop_file% (
 echo.PYTHONFOLDER=%PYTHONFOLDER% >> %_ci_prop_file%
@@ -252,7 +252,7 @@ if "%BLENDERHOME%" == "" (
   echo.  Blender not found
   goto endblender
 )
-set PATH="%_blender%";%PATH%
+set _path="%_blender%";%_path%
 if exist %_ci_prop_file% (
 echo.BLENDERHOME=%BLENDERHOME% >> %_ci_prop_file% 
 )
@@ -282,8 +282,10 @@ echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >> %_ci_prop_file%
 )
 echo.
 echo.  Global Blender addons: 
+echo.
 echo.  %BLENDERADDONS%
 echo.  Local Blender addons:
+echo.
 echo.  %APPDATABLENDERADDONS%
 
 :endblender
@@ -308,7 +310,7 @@ if "%GITHOME%" == "" (
   goto endgit
 )
 echo.  Git home: %GITHOME%
-set PATH=%GITHOME%\bin;%PATH%
+set _path="%GITHOME%\bin";%_path%
 
 if exist %_ci_prop_file% (
 echo.GITHOME="%GITHOME%" >> %_ci_prop_file% 
@@ -327,7 +329,7 @@ if "%NSISHOME%" == "" (
   goto endnsis
 )
 echo.  NSIS home: %NSISHOME%
-set PATH=%NSISHOME%;%PATH%
+set _path=%NSISHOME%;%_path%
 if exist %_ci_prop_file% (
 echo.NSISHOME=%NSISHOME% >> %_ci_prop_file% 
 )
@@ -344,7 +346,7 @@ if "%CMAKEHOME%" == "" (
   goto endcmake
 )
 echo.  CMake home: %CMAKEHOME%
-set PATH=%CMAKEHOME%\bin;%PATH%
+set _path=%CMAKEHOME%\bin;%_path%
 if exist %_ci_prop_file% (
 echo.CMAKEHOME=%CMAKEHOME% >> %_ci_prop_file% 
 )
@@ -362,7 +364,7 @@ if "%SEVENZIPHOME%" == "" (
   goto endsevenzip
 )
 echo.  7-Zip home: %SEVENZIPHOME%
-set PATH=%SEVENZIPHOME%;%PATH%
+set _path=%SEVENZIPHOME%;%_path%
 if exist %_ci_prop_file% (
 echo.SEVENZIPHOME=%SEVENZIPHOME% >> %_ci_prop_file% 
 )
@@ -449,7 +451,7 @@ if "%SWIGHOME%" == "" (
   goto endswig
 )
 echo.  SWIG home: %SWIGHOME%
-set PATH=%SWIGHOME%;%PATH%
+set _path=%SWIGHOME%;%_path%
 if exist %_ci_prop_file% (
 echo.SWIGHOME=%SWIGHOME% >> %_ci_prop_file%
 )
@@ -475,7 +477,7 @@ if "%BOOST_LIBRARYDIR%" == "" (
   echo.  BOOST Library not found
   goto endboost
 )
-set PATH=%BOOST_LIBRARYDIR%;%PATH%
+set _path=%BOOST_LIBRARYDIR%;%_path%
 echo.  BOOST Library: %BOOST_LIBRARYDIR%
 if exist %_ci_prop_file% (
 echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >> %_ci_prop_file%
@@ -528,14 +530,14 @@ goto python_msvc
 
 :sdk60x32
 if not exist "%_ms_sdk_six%\vc\bin" goto compilernotfound
-set PATH="%_ms_sdk_six%\vc\bin";%PATH% 
+set _path="%_ms_sdk_six%\vc\bin";%_path% 
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib";%LIB% 
 goto python_msvc
 
 :sdk60x64
 if not exist "%_ms_sdk_six%\vc\bin\x64" goto compilernotfound
-set PATH="%_ms_sdk_six%\vc\bin\x64";%PATH%
+set _path="%_ms_sdk_six%\vc\bin\x64";%_path%
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib\x64";%LIB% 
 goto python_msvc
@@ -571,7 +573,7 @@ goto endcompiler
 :mingw_standalone
 if exist "C:\mingw\bin" (
   echo.  Using standalone MinGW
-  set PATH=C:\mingw\bin;%PATH%
+  set _path=C:\mingw\bin;%_path%
   goto python_mingw
 ) else (
   echo.  MinGW not found
@@ -580,7 +582,7 @@ if exist "C:\mingw\bin" (
 
 :mingw_qt
 echo.Using MinGW bundled with Qt
-set PATH=%QTDIR%\bin;%QTHOME%\mingw\bin;%PATH%
+set _path=%QTDIR%\bin;%QTHOME%\mingw\bin;%_path%
 goto python_mingw
 
 :python_msvc
@@ -610,6 +612,13 @@ rem **************
 rem ** Start-Up **
 rem **************
 
+:path
+set PATH=%_path%;%PATH%;
+if exist %_ci_prop_file% (
+echo.PATH=%_path%;%%PATH%%; >> %_ci_prop_file%
+)
+:endpath
+
 :workfolder
 if exist "%HOMEDRIVE%%HOMEPATH%\%_work_folder%" set _work_folder=%HOMEDRIVE%%HOMEPATH%\%_work_folder%
 echo.
@@ -635,6 +644,7 @@ set ProgramFiles32=
 set _work_folder=
 set _arch_type=
 set _ci_prop_file=
+set _path=
 
 set _compiler_type=
 set _msvc2008=
