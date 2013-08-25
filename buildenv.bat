@@ -258,7 +258,7 @@ echo.BLENDERHOME=%BLENDERHOME% >> "%_ci_prop_file%"
 )
 echo.  Blender home: %BLENDERHOME%
 
-for %%A in (2.62,2.63,2.64,2.65,2.66,2.67) do (
+for %%A in (2.62,2.63,2.64,2.65,2.66,2.67,2.68,2.69,2.70) do (
   if exist "%BLENDERHOME%\%%A" set BLENDERVERSION=%%A
 )
 if "%BLENDERVERSION%" == "" (
