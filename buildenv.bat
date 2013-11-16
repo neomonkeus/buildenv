@@ -20,6 +20,9 @@ FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\
 if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 if not "%_msvc2010%" == "" set _compiler_type=msvc2010
 
+rem TODO ADD MSVC2012
+
+
 rem MS_SDKs
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0" /v InstallationFolder 2^> nul') do set _ms_sdk_six=%%B
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0A" /v InstallationFolder 2^> nul') do set _ms_sdk_six=%%B
@@ -103,6 +106,7 @@ echo.Utilities:
 echo.  git=FOLDER              [default: %_git_path%]
 echo.  nsis=FOLDER             [default: %_nsis_path%]
 echo.  cmake=FOLDER            [default: %_cmake%]
+echo.  qmake=FOLDER            [default: %_qmake%]
 echo.  seven_zip=FOLDER        [default: %_seven_zip%]
 echo.  pydev_debug=FOLDER	   [default: %_pydev_debug%]
 
@@ -111,6 +115,7 @@ echo.Compilers:
 echo.  compiler=COMPILER       [default: %_compiler_type%]
 echo.  msvc2008=FOLDER         [default: %_msvc2008%]
 echo.  msvc2010=FOLDER         [default: %_msvc2010%]
+echo.  msvc2012=FOLDER         [default: %_msvc2012%]
 
 rem ms_sdk
 echo.MS SDKs
@@ -154,20 +159,23 @@ if "%SWITCH%" == "python" set _python_path=%VALUE%
 
 rem Progs
 if "%SWITCH%" == "blender" set _blender=%VALUE%
+if "%SWITCH%" == "msvc2008" set _msvc2008=%VALUE%
+if "%SWITCH%" == "msvc2010" set _msvc2010=%VALUE%
+if "%SWITCH%" == "msvc2012" set _msvc2012=%VALUE%
 
 rem Utilities
 if "%SWITCH%" == "git" set _git_path=%VALUE%
 if "%SWITCH%" == "nsis" set _nsis_path=%VALUE%
 if "%SWITCH%" == "cmake" set _cmake=%VALUE%
+if "%SWITCH%" == "qmake" set _qmake=%VALUE%
 if "%SWITCH%" == "seven_zip" set _seven_zip=%VALUE%
 if "%SWITCH%" == "pydev_debug" set _pydev_debug=%VALUE%
 
 rem compilers
-if "%SWITCH%" == "compiler" set _compiler_type=%VALUE%
-if "%SWITCH%" == "msvc2008" set _msvc2008=%VALUE%
 if "%SWITCH%" == "msvc2008" set _compiler_type=msvc2008
-if "%SWITCH%" == "msvc2010" set _msvc2010=%VALUE%
 if "%SWITCH%" == "msvc2010" set _compiler_type=msvc2010
+if "%SWITCH%" == "msvc2012" set _compiler_type=msvc2012
+if "%SWITCH%" == "compiler" set _compiler_type=%VALUE%
 
 rem libs
 if "%SWITCH%" == "qt" set _qt_path=%VALUE%
@@ -404,6 +412,7 @@ if "%QTHOME%" == "" (
     echo.  Qt not found
     goto endqt
 )
+
 echo.  Qt home: %QTHOME%
 if exist "%_ci_prop_file%" (
 echo.QTHOME=%QTHOME% >> "%_ci_prop_file%" 
@@ -412,6 +421,7 @@ echo.QTHOME=%QTHOME% >> "%_ci_prop_file%"
 for %%A in (4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Desktop\Qt\%%A" set QTVERSION=%%A
 )
+
 if "%QTVERSION%" == "" (
   echo.  Qt version not found
   goto endqt
@@ -429,17 +439,23 @@ echo.  Detection of Qt with non-mingw compilers not yet implemented.
 echo.  Qt directory not set.
 goto endqt
 )
+
 if "%QTDIR%" == "" (
   echo.  Qt directory not found
   goto endqt
 )
-rem PATH set later; see :mingw
+
 echo.  Qt directory: %QTDIR%
 if exist "%_ci_prop_file%" (
 echo.QTDIR=%QTDIR% >> "%_ci_prop_file%"
 )
 :endqt
 
+:qmake
+echo.
+echo.Setting QMake Environment
+
+:endqmake
 
 :swig
 
