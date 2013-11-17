@@ -69,7 +69,10 @@ nsis=FOLDER
 
 cmake=FOLDER
   the base FOLDER of your CMake installation;
-  
+
+qmake=FOLDER
+  the base FOLDER of your QMake installation;
+
 seven_zip=FOLDER
   the base FOLDER of your 7-zip installation;
   
@@ -245,6 +248,11 @@ Supported versions of CMake
 ---------------------------
 
 * Auto-detects CMake 2.8 or user defined.
+
+Supported versions of QMake
+---------------------------
+
+User defined
 
 Supported versions of SWIG
 --------------------------
