@@ -14,12 +14,15 @@ set _work_folder=%HOMEDRIVE%%HOMEPATH%
 
 rem compilers
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
 if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
 if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
 if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
 
