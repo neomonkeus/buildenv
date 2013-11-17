@@ -14,13 +14,13 @@ set _work_folder=%HOMEDRIVE%%HOMEPATH%
 
 rem compilers
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
-if not "%_msvc2008%" == "" set _compiler_type=msvc2008
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
 if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
-if not "%_msvc2010%" == "" set _compiler_type=msvc2010
 
-rem TODO ADD MSVC2012
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
 
 rem MS_SDKs
