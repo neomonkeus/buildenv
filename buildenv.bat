@@ -13,24 +13,30 @@ if not "%ProgramFiles(x86)%" == "" set ProgramFiles32=%ProgramFiles(x86)%
 set _work_folder=%HOMEDRIVE%%HOMEPATH%
 
 rem compilers
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_32=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_32=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_64=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_64=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_32=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_32=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_64=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_64=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_32=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_32=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_64=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_64=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
 
 rem MS_SDKs
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0" /v InstallationFolder 2^> nul') do set _ms_sdk_six=%%B
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v6.0A" /v InstallationFolder 2^> nul') do set _ms_sdk_six=%%B
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0" /v InstallationFolder 2^> nul') do set _ms_sdk_seven=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1" /v InstallationFolder 2^> nul') do set _ms_sdk_seven_One=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1" /v InstallationFolder 2^> nul') do set _ms_sdk_seven_one=%%B
 
 rem langs
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Python\PythonCore\2.6\InstallPath" /ve 2^> nul') do set _python_path=%%B
@@ -113,9 +119,12 @@ echo.  pydev_debug=FOLDER	   [default: %_pydev_debug%]
 rem compilers
 echo.Compilers:
 echo.  compiler=COMPILER       [default: %_compiler_type%]
-echo.  msvc2008=FOLDER         [default: %_msvc2008%]
-echo.  msvc2010=FOLDER         [default: %_msvc2010%]
-echo.  msvc2012=FOLDER         [default: %_msvc2012%]
+echo.  msvc2008=FOLDER         [default: %_msvc2008_32%]
+echo.  msvc2010=FOLDER         [default: %_msvc2010_32%]
+echo.  msvc2012=FOLDER         [default: %_msvc2012_32%]
+echo.  msvc2008_64=FOLDER         [default: %_msvc2008_64%]
+echo.  msvc2010_64=FOLDER         [default: %_msvc2010_64%]
+echo.  msvc2012_64=FOLDER         [default: %_msvc2012_64%]
 
 rem ms_sdk
 echo.MS SDKs
@@ -175,6 +184,11 @@ rem compilers
 if "%SWITCH%" == "msvc2008" set _compiler_type=msvc2008
 if "%SWITCH%" == "msvc2010" set _compiler_type=msvc2010
 if "%SWITCH%" == "msvc2012" set _compiler_type=msvc2012
+
+if "%SWITCH%" == "msvc2008_64" set _compiler_type=msvc2008
+if "%SWITCH%" == "msvc2010_64" set _compiler_type=msvc2010
+if "%SWITCH%" == "msvc2012_64" set _compiler_type=msvc2012
+
 if "%SWITCH%" == "compiler" set _compiler_type=%VALUE%
 
 rem libs
@@ -656,15 +670,23 @@ rem **************
 rem ** Clean Up **
 rem **************
 
+rem architecture:
+
 set ProgramFiles32=
 set _work_folder=
 set _arch_type=
 set _ci_prop_file=
 set _path=
 
+rem compiler: 
+
 set _compiler_type=
-set _msvc2008=
-set _msvc2010=
+set _msvc2008_32=
+set _msvc2010_32=
+set _msvc2012_32=
+set _msvc2008_64=
+set _msvc2010_64=
+set _msvc2012_64=
 
 set _ms_sdk_six=
 set _ms_sdk_seven=
