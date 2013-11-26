@@ -8,16 +8,19 @@ Installation
 Usage
 =====
 
-* Buildenv is used to setup a console window
-  with pre-defined environmental setting.
+* Buildenv is used to setup a console window with pre-defined environmental setting.
 
-* These setting are for the console session only,
+* These setting are for the console session only, 
   to avoid *PATH* pollution and avoids manually setting on each use.
 
 * The setting are read from a .ini file created by the user in the ./ini folder.
 
 * Running :file:`create-shortcut.bat` creates separate buildenv shortcuts
   on your desktop.
+
+* There are two optional arguments [ini_location] [output_folder]
+  - [ini_location] Reads any *.ini file, create corresponding buildenv shortcut : Default=".\ini"
+  - [output_folder] The directory where the shortcuts will be created : Default="<current_user>\Desktop"
 
 * Running the shortcut will call buildenv, passing the specific .ini setting,
   with a resulting console window.
