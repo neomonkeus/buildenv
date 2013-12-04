@@ -433,7 +433,14 @@ echo.QTHOME=%QTHOME% >> "%_ci_prop_file%"
 )
 
 for %%A in (5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
-  if exist "%QTHOME%\Desktop\Qt\%%A" set QTVERSION=%%A
+  if exist "%QTHOME%\Qt\%%A" (
+      set QTVERSION=%%A
+      goto qtversionfound
+  )  
+)
+
+if exist "%QTHOME%" (
+  goto qtversionfound
 )
 
 if "%QTVERSION%" == "" (
@@ -441,34 +448,68 @@ if "%QTVERSION%" == "" (
   goto endqt
 )
 
+:qtversionfound
+
 echo.  Qt version: %QTVERSION%
+
 if exist "%_ci_prop_file%" (
 echo.QTVERSION=%QTVERSION% >> "%_ci_prop_file%" 
 )
 
-if exist "%QTHOME%\Desktop\Qt\%QTVERSION%\mingw" (
-set QTDIR=%QTHOME%\Desktop\Qt\%QTVERSION%\mingw
-) else (
-echo.  Detection of Qt with non-mingw compilers not yet implemented.
-echo.  Qt directory not set.
-goto endqt
-)
-
-if "%QTDIR%" == "" (
+if exist "%QTHOME%\Qt\%QTVERSION%\mingw" (
+  set QTDIR=%QTHOME%\Qt\%QTVERSION%\mingw
+  goto qtdirectoryfound
+) else if exist "%QTHOME%\Qt\%QTVERSION%\msvc2012_64_opengl" (
+  set QTDIR=%QTHOME%\Qt\%QTVERSION%\msvc2012_64_opengl
+  goto qtdirectoryfound
+) else if exist "%QTHOME%\bin" (
+  goto qtdirectoryfound
+) else if "%QTDIR%" == "" (
   echo.  Qt directory not found
   goto endqt
 )
 
+:qtdirectoryfound
+
+if exist "%QTDIR%\include" ( 
+  set QTINC=%QTDIR%\include
+)
+set _include=%QTINC%;%_include%
+
+if exist "%QTDIR%\lib" ( 
+  set QTLIB=%QTDIR%\lib
+)
+
+set _lib=%QTLIB%;%_lib%
+
 echo.  Qt directory: %QTDIR%
+echo.  Qt include: %QTINC%
+echo.  Qt Lib: %QTLIB%
+
 if exist "%_ci_prop_file%" (
 echo.QTDIR=%QTDIR% >> "%_ci_prop_file%"
+echo.QTINC=%QTDIR%\include >> "%_ci_prop_file%"
+echo.QTLIB=%QTDIR%\lib >> "%_ci_prop_file%"
 )
 :endqt
+
 
 :qmake
 echo.
 echo.Setting QMake Environment
 
+
+if exist "%_qmake%\qmake.exe" set QMAKEHOME=%_qmake%
+if %QMAKEHOME% == "" (
+ echo.  QMAKE not found
+ goto endqmake
+)
+
+echo.  QMAKE home: %QMAKEHOME%
+set _path=%QMAKEHOME%;%_path%
+if exist "%_ci_prop_file%" (
+echo.QMAKEHOME=%QMAKEHOME% >> "%_ci_prop_file%"
+)
 :endqmake
 
 :swig
@@ -637,6 +678,17 @@ echo.  Compiler not found
 
 :endcompiler
 
+
+rem **************
+rem ** Includes **
+rem **************
+
+if exist "%_ci_prop_file%" (
+echo.INCLUDE=%_include% >> "%_ci_prop_file%"
+echo.LIB=%_lib% >> "%_ci_prop_file%"
+)
+
+:endincludes
 
 rem **************
 rem ** Start-Up **
