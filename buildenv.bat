@@ -48,8 +48,8 @@ rem programs
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\BlenderFoundation" /v Install_Dir 2^> nul') do set _blender=%%B
 
 rem utilities
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
 
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
@@ -122,9 +122,9 @@ echo.  compiler=COMPILER       [default: %_compiler_type%]
 echo.  msvc2008=FOLDER         [default: %_msvc2008_32%]
 echo.  msvc2010=FOLDER         [default: %_msvc2010_32%]
 echo.  msvc2012=FOLDER         [default: %_msvc2012_32%]
-echo.  msvc2008_64=FOLDER         [default: %_msvc2008_64%]
-echo.  msvc2010_64=FOLDER         [default: %_msvc2010_64%]
-echo.  msvc2012_64=FOLDER         [default: %_msvc2012_64%]
+echo.  msvc2008_64=FOLDER      [default: %_msvc2008_64%]
+echo.  msvc2010_64=FOLDER      [default: %_msvc2010_64%]
+echo.  msvc2012_64=FOLDER      [default: %_msvc2012_64%]
 
 rem ms_sdk
 echo.MS SDKs
@@ -195,7 +195,6 @@ rem libs
 if "%SWITCH%" == "qt" set _qt_path=%VALUE%
 if "%SWITCH%" == "swig" set _swig=%VALUE%
 if "%SWITCH%" == "boostinc" set _boostinc=%VALUE%
-rem also add boostlib to path so dlls are found
 if "%SWITCH%" == "boostlib" set _boostlib=%VALUE%
 goto eof
 
@@ -321,18 +320,34 @@ rem *****************
 :git
 echo.
 echo.Setting Git Environment
-if exist "%ProgramFiles32%\Git\bin\git.exe" set GITHOME=%ProgramFiles32%\Git
-if exist "%ProgramFiles%\Git\bin\git.exe" set GITHOME=%ProgramFiles%\Git
+
+if exist %_git_path%\git.exe ( 
+  set GITHOME=%_git_path%
+  goto gitfound
+)  
+
+if exist "%ProgramFiles32%\Git\bin\git.exe" set GITHOME=%ProgramFiles32%\Git\bin
+if exist "%ProgramFiles%\Git\bin\git.exe" set GITHOME=%ProgramFiles%\Git\bin
 if exist "%LOCALAPPDATA%\GitHub" (
   for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
 )
-if exist "%_git_path%\bin\git.exe" set GITHOME=%_git_path%
+
+if exist %_auto_git_path%bin\git.exe ( 
+  set GITHOME=%_auto_git_path%bin
+  goto gitfound
+)   
+
+
+
 if "%GITHOME%" == "" (
   echo.  Git not found
   goto endgit
 )
+
+:gitfound
+
 echo.  Git home: %GITHOME%
-set _path="%GITHOME%\bin";%_path%
+set _path="%GITHOME%";%_path%
 
 if exist "%_ci_prop_file%" (
 echo.GITHOME="%GITHOME%" >> "%_ci_prop_file%" 
@@ -456,15 +471,19 @@ if exist "%_ci_prop_file%" (
 echo.QTVERSION=%QTVERSION% >> "%_ci_prop_file%" 
 )
 
-if exist "%QTHOME%\Qt\%QTVERSION%\mingw" (
-  set QTDIR=%QTHOME%\Qt\%QTVERSION%\mingw
+if exist "%QTHOME%\Qt\%QTVERSION%\bin" (
+  set QTDIR=%QTHOME%\Qt\%QTVERSION%
   goto qtdirectoryfound
-) else if exist "%QTHOME%\Qt\%QTVERSION%\msvc2012_64_opengl" (
-  set QTDIR=%QTHOME%\Qt\%QTVERSION%\msvc2012_64_opengl
-  goto qtdirectoryfound
-) else if exist "%QTHOME%\bin" (
-  goto qtdirectoryfound
-) else if "%QTDIR%" == "" (
+) 
+
+for %%A in (mingw,msvc2012_64_opengl) do (
+  if exist "%QTHOME%\Qt\%QTVERSION%\%%A" (
+     set QTDIR=%QTHOME%\Qt\%QTVERSION%\%%A
+	 goto qtdirectoryfound
+  )
+) 
+
+if "%QTDIR%" == "" (
   echo.  Qt directory not found
   goto endqt
 )
@@ -482,6 +501,7 @@ if exist "%QTDIR%\lib" (
 
 set _lib=%QTLIB%;%_lib%
 
+echo.
 echo.  Qt directory: %QTDIR%
 echo.  Qt include: %QTINC%
 echo.  Qt Lib: %QTLIB%
