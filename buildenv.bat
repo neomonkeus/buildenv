@@ -57,11 +57,10 @@ FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMa
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
 
 rem Libraries
-if exist "C:\QtSDK" set _qt_path=C:\QtSDK
 
 
 rem *************
@@ -337,8 +336,6 @@ if exist %_auto_git_path%bin\git.exe (
   goto gitfound
 )   
 
-
-
 if "%GITHOME%" == "" (
   echo.  Git not found
   goto endgit
@@ -393,13 +390,27 @@ echo.CMAKEHOME=%CMAKEHOME% >> "%_ci_prop_file%"
 :sevenzip
 echo.
 echo.Setting 7-Zip Environment
+
+if exist "%_seven_zip%\7z.exe" ( 
+  set SEVENZIPHOME=%_seven_zip%
+  goto sevenzipfound
+)  
+
 if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
 if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
-if exist "%_seven_zip%\7z.exe" set SEVENZIPHOME=%_seven_zip%
-if "%SEVENZIPHOME%" == "" (
+
+if exist %_auto_seven_zip%7z.exe ( 
+  set SEVENZIPHOME=%_auto_seven_zip%
+  goto sevenzipfound
+)   
+
+if "%SEVENZIPHOME%" == "" ( 
   echo.  7-Zip not found
   goto endsevenzip
 )
+
+:sevenzipfound
+
 echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
 if exist "%_ci_prop_file%" (
@@ -437,6 +448,7 @@ rem 1. registry?
 rem 2. check for some standard file to ensure _qt_path actually contains the Qt SDK?
 rem    (similar to NSIS, Git, and Python checks)
 if exist "%_qt_path%" set QTHOME=%_qt_path%
+
 if "%QTHOME%" == "" (
     echo.  Qt not found
     goto endqt
@@ -517,10 +529,9 @@ echo.QTLIB=%QTDIR%\lib >> "%_ci_prop_file%"
 :qmake
 echo.
 echo.Setting QMake Environment
-
-
 if exist "%_qmake%\qmake.exe" set QMAKEHOME=%_qmake%
-if %QMAKEHOME% == "" (
+
+if "%QMAKEHOME%" == "" (
  echo.  QMAKE not found
  goto endqmake
 )
@@ -769,10 +780,16 @@ set _blender=
 set _python_path=
 
 set _git_path=
+set _auto_git_path=
 set _nsis_path=
 set _seven_zip=
+set _auto_seven_zip=
 set _cmake=
 set _pydev_debug=
+set _qmake=
+
+set _include=
+set _lib=
 
 set _qt_path=
 set _swig=
