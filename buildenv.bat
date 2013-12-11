@@ -332,7 +332,8 @@ if exist "%LOCALAPPDATA%\GitHub" (
 )
 
 if exist %_auto_git_path%bin\git.exe ( 
-  set GITHOME=%_auto_git_path%bin
+  set GITHOME=%_auto_git_path%
+  if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
   goto gitfound
 )   
 
@@ -401,6 +402,7 @@ if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
 
 if exist %_auto_seven_zip%7z.exe ( 
   set SEVENZIPHOME=%_auto_seven_zip%
+  if "%SEVENZIPHOME:~-1%"=="\" SET SEVENZIPHOME=%SEVENZIPHOME:~0,-1%
   goto sevenzipfound
 )   
 
