@@ -422,9 +422,8 @@ echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%"
 
 echo.
 echo.Setting PyDev Debug Environment
-if exist "%_pydev_debug%" (
-set PYDEVDEBUG=%_pydev_debug%
-)
+if exist "%_pydev_debug%\pydevd.py" set PYDEVDEBUG=%_pydev_debug%
+
 if "%PYDEVDEBUG%" == "" (
   echo.  Pydev Debug not found
   goto endpydevdebug
