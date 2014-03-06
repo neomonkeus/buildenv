@@ -221,10 +221,14 @@ echo.
 echo.Setting Architecture
 
 echo.  Architecture: %_arch_type% bit
-)
+
+echo.
+echo.CI Output File:
 
 if exist "%_ci_prop_file%" (
-echo.> "%_ci_prop_file%"
+echo.  Using: "%_ci_prop_file%"
+echo.  Clearing file.
+echo. > "%_ci_prop_file%"
 )
 
 :endsettings
@@ -363,9 +367,10 @@ if "%NSISHOME%" == "" (
   goto endnsis
 )
 echo.  NSIS home: %NSISHOME%
-set _path=%NSISHOME%;%_path%
+set _path="%NSISHOME%";%_path%
+
 if exist "%_ci_prop_file%" (
-echo.NSISHOME=%NSISHOME% >> "%_ci_prop_file%" 
+echo.NSISHOME="%NSISHOME%" >> "%_ci_prop_file%" 
 )
 :endnsis
 
@@ -380,9 +385,10 @@ if "%CMAKEHOME%" == "" (
   goto endcmake
 )
 echo.  CMake home: %CMAKEHOME%
-set _path=%CMAKEHOME%\bin;%_path%
+set _path="%CMAKEHOME%\bin";%_path%
+
 if exist "%_ci_prop_file%" (
-echo.CMAKEHOME=%CMAKEHOME% >> "%_ci_prop_file%" 
+echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%" 
 )
 
 :endcmake
@@ -413,6 +419,7 @@ if "%SEVENZIPHOME%" == "" (
 
 echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
+
 if exist "%_ci_prop_file%" (
 echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%" 
 )
@@ -429,6 +436,7 @@ if "%PYDEVDEBUG%" == "" (
   goto endpydevdebug
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
+
 if exist "%_ci_prop_file%" (
 echo.PYDEVDEBUG=%PYDEVDEBUG% >> "%_ci_prop_file%" 
 )
@@ -727,7 +735,7 @@ rem **************
 :path
 set PATH=%_path%;%PATH%;
 if exist "%_ci_prop_file%" (
-echo.PATH=%_path%;%%PATH%%; >> "%_ci_prop_file%"
+echo.PATH=%_path%;%%PATH%% >> "%_ci_prop_file%"
 )
 :endpath
 
