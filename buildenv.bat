@@ -466,7 +466,7 @@ if exist "%_ci_prop_file%" (
 echo.QTHOME=%QTHOME% >> "%_ci_prop_file%" 
 )
 
-for %%A in (5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
+for %%A in (Qt5.2.1\5.2.1,5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Qt\%%A" (
       set QTVERSION=%%A
       goto qtversionfound
