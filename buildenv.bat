@@ -221,10 +221,14 @@ echo.
 echo.Setting Architecture
 
 echo.  Architecture: %_arch_type% bit
-)
+
+echo.
+echo.CI Output File:
 
 if exist "%_ci_prop_file%" (
-echo.> "%_ci_prop_file%"
+echo.  Using: "%_ci_prop_file%"
+echo.  Clearing file.
+echo. > "%_ci_prop_file%"
 )
 
 :endsettings
@@ -364,9 +368,10 @@ if "%NSISHOME%" == "" (
   goto endnsis
 )
 echo.  NSIS home: %NSISHOME%
-set _path=%NSISHOME%;%_path%
+set _path="%NSISHOME%";%_path%
+
 if exist "%_ci_prop_file%" (
-echo.NSISHOME=%NSISHOME% >> "%_ci_prop_file%" 
+echo.NSISHOME="%NSISHOME%" >> "%_ci_prop_file%" 
 )
 :endnsis
 
@@ -381,9 +386,10 @@ if "%CMAKEHOME%" == "" (
   goto endcmake
 )
 echo.  CMake home: %CMAKEHOME%
-set _path=%CMAKEHOME%\bin;%_path%
+set _path="%CMAKEHOME%\bin";%_path%
+
 if exist "%_ci_prop_file%" (
-echo.CMAKEHOME=%CMAKEHOME% >> "%_ci_prop_file%" 
+echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%" 
 )
 
 :endcmake
@@ -415,6 +421,7 @@ if "%SEVENZIPHOME%" == "" (
 
 echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
+
 if exist "%_ci_prop_file%" (
 echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%" 
 )
@@ -424,14 +431,14 @@ echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%"
 
 echo.
 echo.Setting PyDev Debug Environment
-if exist "%_pydev_debug%" (
-set PYDEVDEBUG=%_pydev_debug%
-)
+if exist "%_pydev_debug%\pydevd.py" set PYDEVDEBUG=%_pydev_debug%
+
 if "%PYDEVDEBUG%" == "" (
   echo.  Pydev Debug not found
   goto endpydevdebug
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
+
 if exist "%_ci_prop_file%" (
 echo.PYDEVDEBUG=%PYDEVDEBUG% >> "%_ci_prop_file%" 
 )
@@ -461,7 +468,7 @@ if exist "%_ci_prop_file%" (
 echo.QTHOME=%QTHOME% >> "%_ci_prop_file%" 
 )
 
-for %%A in (5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
+for %%A in (Qt5.2.1\5.2.1,5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Qt\%%A" (
       set QTVERSION=%%A
       goto qtversionfound
@@ -730,7 +737,7 @@ rem **************
 :path
 set PATH=%_path%;%PATH%;
 if exist "%_ci_prop_file%" (
-echo.PATH=%_path%;%%PATH%%; >> "%_ci_prop_file%"
+echo.PATH=%_path%;%%PATH%% >> "%_ci_prop_file%"
 )
 :endpath
 
