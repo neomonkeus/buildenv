@@ -276,7 +276,7 @@ if "%BLENDERHOME%" == "" (
   echo.  Blender not found
   goto endblender
 )
-set _path="%_blender%";%_path%
+set _path=%_blender%;%_path%
 if exist "%_ci_prop_file%" (
 echo.BLENDERHOME=%BLENDERHOME% >> "%_ci_prop_file%" 
 )
@@ -349,7 +349,7 @@ if "%GITHOME%" == "" (
 :gitfound
 
 echo.  Git home: %GITHOME%
-set _path="%GITHOME%";%_path%
+set _path=%GITHOME%;%_path%
 
 if exist "%_ci_prop_file%" (
 echo.GITHOME="%GITHOME%" >> "%_ci_prop_file%" 
@@ -368,7 +368,7 @@ if "%NSISHOME%" == "" (
   goto endnsis
 )
 echo.  NSIS home: %NSISHOME%
-set _path="%NSISHOME%";%_path%
+set _path=%NSISHOME%;%_path%
 
 if exist "%_ci_prop_file%" (
 echo.NSISHOME="%NSISHOME%" >> "%_ci_prop_file%" 
@@ -386,7 +386,7 @@ if "%CMAKEHOME%" == "" (
   goto endcmake
 )
 echo.  CMake home: %CMAKEHOME%
-set _path="%CMAKEHOME%\bin";%_path%
+set _path=%CMAKEHOME%\bin;%_path%
 
 if exist "%_ci_prop_file%" (
 echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%" 
@@ -641,14 +641,14 @@ goto python_msvc
 
 :sdk60x32
 if not exist "%_ms_sdk_six%\vc\bin" goto compilernotfound
-set _path="%_ms_sdk_six%\vc\bin";%_path% 
+set _path=%_ms_sdk_six%\vc\bin;%_path% 
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib";%LIB% 
 goto python_msvc
 
 :sdk60x64
 if not exist "%_ms_sdk_six%\vc\bin\x64" goto compilernotfound
-set _path="%_ms_sdk_six%\vc\bin\x64";%_path%
+set _path=%_ms_sdk_six%\vc\bin\x64;%_path%
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib\x64";%LIB% 
 goto python_msvc
