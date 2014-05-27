@@ -8,16 +8,19 @@ Installation
 Usage
 =====
 
-* Buildenv is used to setup a console window
-  with pre-defined environmental setting.
+* Buildenv is used to setup a console window with pre-defined environmental setting.
 
-* These setting are for the console session only,
+* These setting are for the console session only, 
   to avoid *PATH* pollution and avoids manually setting on each use.
 
 * The setting are read from a .ini file created by the user in the ./ini folder.
 
 * Running :file:`create-shortcut.bat` creates separate buildenv shortcuts
   on your desktop.
+
+* There are two optional arguments [ini_location] [output_folder]
+  - [ini_location] Reads any *.ini file, create corresponding buildenv shortcut : Default=".\ini"
+  - [output_folder] The directory where the shortcuts will be created : Default="<current_user>\Desktop"
 
 * Running the shortcut will call buildenv, passing the specific .ini setting,
   with a resulting console window.
@@ -69,7 +72,10 @@ nsis=FOLDER
 
 cmake=FOLDER
   the base FOLDER of your CMake installation;
-  
+
+qmake=FOLDER
+  the base FOLDER of your QMake installation;
+
 seven_zip=FOLDER
   the base FOLDER of your 7-zip installation;
   
@@ -245,6 +251,11 @@ Supported versions of CMake
 ---------------------------
 
 * Auto-detects CMake 2.8 or user defined.
+
+Supported versions of QMake
+---------------------------
+
+User defined
 
 Supported versions of SWIG
 --------------------------
