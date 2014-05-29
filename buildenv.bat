@@ -13,23 +13,23 @@ if not "%ProgramFiles(x86)%" == "" set ProgramFiles32=%ProgramFiles(x86)%
 set _work_folder=%HOMEDRIVE%%HOMEPATH%
 
 rem compilers
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_32=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_64=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_32=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_64=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_32=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_64=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
 
 rem MS_SDKs
@@ -604,6 +604,8 @@ rem ***************
 :compilers
 echo.
 echo.Setting Compiler Environment (%_compiler_type%, %_arch_type% bit)
+if "%_compiler_type%x%_arch_type%" == "x32" goto auto_set_compiler32
+if "%_compiler_type%x%_arch_type%" == "x64" goto auto_set_compiler64
 
 if "%_compiler_type%x%_arch_type%" == "msvc2010x32" goto msvc2010x32
 if "%_compiler_type%x%_arch_type%" == "msvc2010x64" goto msvc2010x64
@@ -619,6 +621,43 @@ if "%_compiler_type%x%_arch_type%" == "sdk71x32" goto sdk71x32
 if "%_compiler_type%x%_arch_type%" == "sdk71x64" goto sdk71x64
 goto compilernotfound
 
+:auto_set_compiler32
+echo autoset
+if not "%_msvc2011%" == "" (
+set _msvc2011=%_msvc2011%
+goto msvc2011x32
+)
+echo autoset1
+if not "%_msvc2010%" == "" (
+set _msvc2010=%_msvc2010%
+goto msvc2010x32
+)
+echo autoset2
+if not "%_msvc2008%" == "" (
+set _msvc2008=%_msvc2008%
+goto msvc2008x32
+)
+echo autoset3
+
+:auto_set_compiler64
+if not "%_msvc2011%" == "" (
+set _msvc2011=%_msvc2011%
+goto msvc2011x64
+)
+echo autoset4
+if not "%_msvc2010%" == "" (
+set _msvc2010=%_msvc2010%
+goto msvc2010x64
+)
+echo autoset5
+echo %_msvc2008%
+if not "%_msvc2008%" == "" (
+set _msvc2008=%_msvc2008%
+goto msvc2008x64
+)
+echo autoset6
+
+
 :msvc2010x64
 if not exist "%_msvc2010%\bin\vcvars64.bat" goto compilernotfound
 call "%_msvc2010%\bin\vcvars64.bat"
@@ -630,6 +669,8 @@ call "%_msvc2010%\bin\vcvars32.bat"
 goto python_msvc
 
 :msvc2008x64
+echo made it to 08x64
+echo "%_msvc2008%"
 if not exist "%_msvc2008%\bin\vcvars64.bat" goto compilernotfound
 call "%_msvc2008%\bin\vcvars64.bat"
 goto python_msvc
@@ -641,14 +682,14 @@ goto python_msvc
 
 :sdk60x32
 if not exist "%_ms_sdk_six%\vc\bin" goto compilernotfound
-set _path=%_ms_sdk_six%\vc\bin;%_path% 
+set _path="%_ms_sdk_six%\vc\bin";%_path% 
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib";%LIB% 
 goto python_msvc
 
 :sdk60x64
 if not exist "%_ms_sdk_six%\vc\bin\x64" goto compilernotfound
-set _path=%_ms_sdk_six%\vc\bin\x64;%_path%
+set _path="%_ms_sdk_six%\vc\bin\x64";%_path%
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib\x64";%LIB% 
 goto python_msvc
