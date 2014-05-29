@@ -607,6 +607,8 @@ echo.Setting Compiler Environment (%_compiler_type%, %_arch_type% bit)
 if "%_compiler_type%x%_arch_type%" == "x32" goto auto_set_compiler32
 if "%_compiler_type%x%_arch_type%" == "x64" goto auto_set_compiler64
 
+if "%_compiler_type%x%_arch_type%" == "msvc2012x32" goto msvc2012x32
+if "%_compiler_type%x%_arch_type%" == "msvc2012x64" goto msvc2012x64
 if "%_compiler_type%x%_arch_type%" == "msvc2010x32" goto msvc2010x32
 if "%_compiler_type%x%_arch_type%" == "msvc2010x64" goto msvc2010x64
 if "%_compiler_type%x%_arch_type%" == "msvc2008x32" goto msvc2008x32
@@ -623,9 +625,9 @@ goto compilernotfound
 
 :auto_set_compiler32
 echo autoset
-if not "%_msvc2011%" == "" (
-set _msvc2011=%_msvc2011%
-goto msvc2011x32
+if not "%_msvc2012%" == "" (
+set _msvc2012=%_msvc2012%
+goto msvc2012x32
 )
 echo autoset1
 if not "%_msvc2010%" == "" (
@@ -640,9 +642,9 @@ goto msvc2008x32
 echo autoset3
 
 :auto_set_compiler64
-if not "%_msvc2011%" == "" (
-set _msvc2011=%_msvc2011%
-goto msvc2011x64
+if not "%_msvc2012%" == "" (
+set _msvc2012=%_msvc2012%
+goto msvc2012x64
 )
 echo autoset4
 if not "%_msvc2010%" == "" (
@@ -657,6 +659,16 @@ goto msvc2008x64
 )
 echo autoset6
 
+
+:msvc2012x64
+if not exist "%_msvc2012%\bin\vcvars64.bat" goto compilernotfound
+call "%_msvc2012%\bin\vcvars64.bat"
+goto python_msvc
+
+:msvc2012x32
+if not exist "%_msvc2012%\bin\vcvars32.bat" goto compilernotfound
+call "%_msvc2012%\bin\vcvars32.bat"
+goto python_msvc
 
 :msvc2010x64
 if not exist "%_msvc2010%\bin\vcvars64.bat" goto compilernotfound
