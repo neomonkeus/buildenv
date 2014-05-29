@@ -624,40 +624,14 @@ if "%_compiler_type%x%_arch_type%" == "sdk71x64" goto sdk71x64
 goto compilernotfound
 
 :auto_set_compiler32
-
-if not "%_msvc2012%" == "" (
-set _msvc2012=%_msvc2012%
-goto msvc2012x32
-)
-
-if not "%_msvc2010%" == "" (
-set _msvc2010=%_msvc2010%
-goto msvc2010x32
-)
-
-if not "%_msvc2008%" == "" (
-set _msvc2008=%_msvc2008%
-goto msvc2008x32
-)
+if not "%_msvc2012%" == "" goto msvc2012x32
+if not "%_msvc2010%" == "" goto msvc2010x32
+if not "%_msvc2008%" == "" goto msvc2008x32
 
 :auto_set_compiler64
-
-if not "%_msvc2012%" == "" (
-set _msvc2012=%_msvc2012%
-goto msvc2012x64
-)
-
-if not "%_msvc2010%" == "" (
-set _msvc2010=%_msvc2010%
-goto msvc2010x64
-)
-
-if not "%_msvc2008%" == "" (
-set _msvc2008=%_msvc2008%
-goto msvc2008x64
-)
-
-
+if not "%_msvc2012%" == "" goto msvc2012x64
+if not "%_msvc2010%" == "" goto msvc2010x64
+if not "%_msvc2008%" == "" goto msvc2008x64
 
 :msvc2012x64
 if not exist "%_msvc2012%\bin\vcvars64.bat" goto compilernotfound
