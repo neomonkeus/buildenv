@@ -624,40 +624,39 @@ if "%_compiler_type%x%_arch_type%" == "sdk71x64" goto sdk71x64
 goto compilernotfound
 
 :auto_set_compiler32
-echo autoset
+
 if not "%_msvc2012%" == "" (
 set _msvc2012=%_msvc2012%
 goto msvc2012x32
 )
-echo autoset1
+
 if not "%_msvc2010%" == "" (
 set _msvc2010=%_msvc2010%
 goto msvc2010x32
 )
-echo autoset2
+
 if not "%_msvc2008%" == "" (
 set _msvc2008=%_msvc2008%
 goto msvc2008x32
 )
-echo autoset3
 
 :auto_set_compiler64
+
 if not "%_msvc2012%" == "" (
 set _msvc2012=%_msvc2012%
 goto msvc2012x64
 )
-echo autoset4
+
 if not "%_msvc2010%" == "" (
 set _msvc2010=%_msvc2010%
 goto msvc2010x64
 )
-echo autoset5
-echo %_msvc2008%
+
 if not "%_msvc2008%" == "" (
 set _msvc2008=%_msvc2008%
 goto msvc2008x64
 )
-echo autoset6
+
 
 
 :msvc2012x64
@@ -681,8 +680,6 @@ call "%_msvc2010%\bin\vcvars32.bat"
 goto python_msvc
 
 :msvc2008x64
-echo made it to 08x64
-echo "%_msvc2008%"
 if not exist "%_msvc2008%\bin\vcvars64.bat" goto compilernotfound
 call "%_msvc2008%\bin\vcvars64.bat"
 goto python_msvc
