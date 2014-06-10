@@ -48,8 +48,8 @@ rem programs
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\BlenderFoundation" /v Install_Dir 2^> nul') do set _blender=%%B
 
 rem utilities
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
 
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
@@ -57,8 +57,8 @@ FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMa
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
 
 rem Libraries
 
@@ -96,7 +96,7 @@ echo.Auto-detected Locations:
 rem Misc
 echo.  start=FOLDER            [default: %_work_folder%]
 echo.  arch=BITS               [default: %_arch_type%]
-echo.  ci_output=FILE		   [default: "%_ci_prop_file%"]
+echo.  ci_output=FILE		   [default: %_ci_prop_file%]
 
 rem Lang
 echo.Languages:
@@ -224,11 +224,10 @@ echo.  Architecture: %_arch_type% bit
 
 echo.
 echo.CI Output File:
-
 if exist "%_ci_prop_file%" (
-echo.  Using: "%_ci_prop_file%"
+echo.  Using: %_ci_prop_file%
 echo.  Clearing file.
-echo. > "%_ci_prop_file%"
+echo. >"%_ci_prop_file%"
 )
 
 :endsettings
@@ -256,7 +255,7 @@ set PYTHONFOLDER=%_python_path%
 %_python_path%\python.exe -c "import sys; print(""  ""+sys.version)"
 
 if exist "%_ci_prop_file%" (
-echo.PYTHONFOLDER=%PYTHONFOLDER% >> "%_ci_prop_file%"
+echo.PYTHONFOLDER=%PYTHONFOLDER% >>"%_ci_prop_file%"
 )
 
 :endpython
@@ -278,7 +277,7 @@ if "%BLENDERHOME%" == "" (
 )
 set _path=%_blender%;%_path%
 if exist "%_ci_prop_file%" (
-echo.BLENDERHOME=%BLENDERHOME% >> "%_ci_prop_file%" 
+echo.BLENDERHOME=%BLENDERHOME% >>"%_ci_prop_file%"
 )
 echo.  Blender home: %BLENDERHOME%
 
@@ -290,7 +289,7 @@ if "%BLENDERVERSION%" == "" (
   goto endblender
 )
 if exist "%_ci_prop_file%" (
-echo.BLENDERVERSION=%BLENDERVERSION% >> "%_ci_prop_file%"
+echo.BLENDERVERSION=%BLENDERVERSION% >>"%_ci_prop_file%"
 )
 echo.  Blender version: %BLENDERVERSION%
 
@@ -301,8 +300,8 @@ if "%BLENDERADDONS%" == "" (
 )
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
 if exist "%_ci_prop_file%" (
-echo.BLENDERADDONS=%BLENDERADDONS% >> "%_ci_prop_file%" 
-echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >> "%_ci_prop_file%" 
+echo.BLENDERADDONS=%BLENDERADDONS% >>"%_ci_prop_file%" 
+echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >>"%_ci_prop_file%" 
 )
 echo.
 echo.  Global Blender addons: 
@@ -335,8 +334,8 @@ if exist "%LOCALAPPDATA%\GitHub" (
   for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
 )
 
-if exist %_auto_git_path%bin\git.exe ( 
-  set GITHOME=%_auto_git_path%
+if exist %_git_path%bin\git.exe ( 
+  set GITHOME=%_git_path%
   if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
   goto gitfound
 )   
@@ -350,9 +349,10 @@ if "%GITHOME%" == "" (
 
 echo.  Git home: %GITHOME%
 set _path=%GITHOME%;%_path%
+set git=%_git_path%bin\git.exe
 
 if exist "%_ci_prop_file%" (
-echo.GITHOME="%GITHOME%" >> "%_ci_prop_file%" 
+echo.GITHOME=%GITHOME% >>"%_ci_prop_file%" 
 )
 
 :endgit
@@ -371,7 +371,7 @@ echo.  NSIS home: %NSISHOME%
 set _path=%NSISHOME%;%_path%
 
 if exist "%_ci_prop_file%" (
-echo.NSISHOME="%NSISHOME%" >> "%_ci_prop_file%" 
+echo.NSISHOME=%NSISHOME% >>"%_ci_prop_file%" 
 )
 :endnsis
 
@@ -389,7 +389,7 @@ echo.  CMake home: %CMAKEHOME%
 set _path=%CMAKEHOME%\bin;%_path%
 
 if exist "%_ci_prop_file%" (
-echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%" 
+echo.CMAKEHOME=%CMAKEHOME% >>"%_ci_prop_file%" 
 )
 
 :endcmake
@@ -406,8 +406,8 @@ if exist "%_seven_zip%\7z.exe" (
 if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
 if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
 
-if exist %_auto_seven_zip%7z.exe ( 
-  set SEVENZIPHOME=%_auto_seven_zip%
+if exist %_seven_zip%7z.exe ( 
+  set SEVENZIPHOME=%_seven_zip%
   if "%SEVENZIPHOME:~-1%"=="\" SET SEVENZIPHOME=%SEVENZIPHOME:~0,-1%
   goto sevenzipfound
 )   
@@ -423,7 +423,7 @@ echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
 
 if exist "%_ci_prop_file%" (
-echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%" 
+echo.SEVENZIPHOME=%SEVENZIPHOME% >>"%_ci_prop_file%" 
 )
 :endsevenzip
 
@@ -440,7 +440,7 @@ if "%PYDEVDEBUG%" == "" (
 echo.  PyDev Debug home: %PYDEVDEBUG%
 
 if exist "%_ci_prop_file%" (
-echo.PYDEVDEBUG=%PYDEVDEBUG% >> "%_ci_prop_file%" 
+echo.PYDEVDEBUG=%PYDEVDEBUG% >>"%_ci_prop_file%" 
 )
 :endpydevdebug
 
@@ -465,7 +465,7 @@ if "%QTHOME%" == "" (
 
 echo.  Qt home: %QTHOME%
 if exist "%_ci_prop_file%" (
-echo.QTHOME=%QTHOME% >> "%_ci_prop_file%" 
+echo.QTHOME=%QTHOME% >>"%_ci_prop_file%" 
 )
 
 for %%A in (Qt5.2.1\5.2.1,5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
@@ -489,7 +489,7 @@ if "%QTVERSION%" == "" (
 echo.  Qt version: %QTVERSION%
 
 if exist "%_ci_prop_file%" (
-echo.QTVERSION=%QTVERSION% >> "%_ci_prop_file%" 
+echo.QTVERSION=%QTVERSION% >>"%_ci_prop_file%" 
 )
 
 if exist "%QTHOME%\Qt\%QTVERSION%\bin" (
@@ -528,9 +528,9 @@ echo.  Qt include: %QTINC%
 echo.  Qt Lib: %QTLIB%
 
 if exist "%_ci_prop_file%" (
-echo.QTDIR=%QTDIR% >> "%_ci_prop_file%"
-echo.QTINC=%QTDIR%\include >> "%_ci_prop_file%"
-echo.QTLIB=%QTDIR%\lib >> "%_ci_prop_file%"
+echo.QTDIR=%QTDIR% >>"%_ci_prop_file%"
+echo.QTINC=%QTDIR%\include >>"%_ci_prop_file%"
+echo.QTLIB=%QTDIR%\lib >>"%_ci_prop_file%"
 )
 :endqt
 
@@ -548,7 +548,7 @@ if "%QMAKEHOME%" == "" (
 echo.  QMAKE home: %QMAKEHOME%
 set _path=%QMAKEHOME%;%_path%
 if exist "%_ci_prop_file%" (
-echo.QMAKEHOME=%QMAKEHOME% >> "%_ci_prop_file%"
+echo.QMAKEHOME=%QMAKEHOME% >>"%_ci_prop_file%"
 )
 :endqmake
 
@@ -564,7 +564,7 @@ if "%SWIGHOME%" == "" (
 echo.  SWIG home: %SWIGHOME%
 set _path=%SWIGHOME%;%_path%
 if exist "%_ci_prop_file%" (
-echo.SWIGHOME=%SWIGHOME% >> "%_ci_prop_file%"
+echo.SWIGHOME=%SWIGHOME% >>"%_ci_prop_file%"
 )
 :endswig
 
@@ -580,7 +580,7 @@ if "%BOOST_INCLUDEDIR%" == "" (
 )
 echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
 if exist "%_ci_prop_file%" (
-echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >> "%_ci_prop_file%"
+echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >>"%_ci_prop_file%"
 )
 
 if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
@@ -591,7 +591,7 @@ if "%BOOST_LIBRARYDIR%" == "" (
 set _path=%BOOST_LIBRARYDIR%;%_path%
 echo.  BOOST Library: %BOOST_LIBRARYDIR%
 if exist "%_ci_prop_file%" (
-echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >> "%_ci_prop_file%"
+echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >>"%_ci_prop_file%"
 )
 :endboost
 
@@ -748,8 +748,8 @@ rem ** Includes **
 rem **************
 
 if exist "%_ci_prop_file%" (
-echo.INCLUDE=%_include% >> "%_ci_prop_file%"
-echo.LIB=%_lib% >> "%_ci_prop_file%"
+echo.INCLUDE=%_include% >>"%_ci_prop_file%"
+echo.LIB=%_lib% >>"%_ci_prop_file%"
 )
 
 :endincludes
@@ -761,7 +761,7 @@ rem **************
 :path
 set PATH=%_path%;%PATH%;
 if exist "%_ci_prop_file%" (
-echo.PATH=%_path%;%%PATH%% >> "%_ci_prop_file%"
+echo.PATH=%_path%;%%PATH%% >>"%_ci_prop_file%"
 )
 :endpath
 
@@ -813,10 +813,10 @@ set _blender=
 set _python_path=
 
 set _git_path=
-set _auto_git_path=
+set _git_path=
 set _nsis_path=
 set _seven_zip=
-set _auto_seven_zip=
+set _seven_zip=
 set _cmake=
 set _pydev_debug=
 set _qmake=
