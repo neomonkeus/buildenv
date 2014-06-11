@@ -759,12 +759,9 @@ rem ** Start-Up **
 rem **************
 
 :path
-echo.Set working path:
-echo.
-set PATH=%_path%;%PATH%
-echo.PATH=%_path%;%PATH%
+set PATH=%_path%%PATH%
 if exist "%_ci_prop_file%" (
-echo.PATH="%_path%;%PATH%" >>"%_ci_prop_file%"
+echo."%PATH%">>"%_ci_prop_file%"
 )
 :endpath
 
