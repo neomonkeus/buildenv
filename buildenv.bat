@@ -224,11 +224,14 @@ echo.  Architecture: %_arch_type% bit
 
 echo.
 echo.CI Output File:
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto postCiProp
+goto endsettings
+
+:postCiProp
 echo.  Using: %_ci_prop_file%
 echo.  Clearing file.
 echo. >"%_ci_prop_file%"
-)
+
 
 :endsettings
 
@@ -241,9 +244,7 @@ rem *****************
 :python
 echo.
 echo.Setting Python Environment
-if exist "%_python_path%\python.exe" ( 
-goto pythonfound 
-)
+if exist "%_python_path%\python.exe" goto pythonfound
 echo.Python not found
 goto endpython
 
@@ -254,9 +255,12 @@ rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 %_python_path%\python.exe -c "import sys; print(""  ""+sys.version)"
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto postCiPython
+goto endpython
+
+:postCiPython
 echo.PYTHONFOLDER=%PYTHONFOLDER% >>"%_ci_prop_file%"
-)
+
 
 :endpython
 
@@ -276,9 +280,13 @@ if "%BLENDERHOME%" == "" (
   goto endblender
 )
 set _path=%_blender%;%_path%
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto postCiBlender
+goto noCiBlender
+
+:postCiBlender
 echo.BLENDERHOME=%BLENDERHOME% >>"%_ci_prop_file%"
-)
+
+:noCiBlender
 echo.  Blender home: %BLENDERHOME%
 
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67,2.68,2.69,2.70) do (
@@ -288,9 +296,14 @@ if "%BLENDERVERSION%" == "" (
   echo.  Blender version not found
   goto endblender
 )
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto ciblenderversion
+goto nociblenderversion
+
+:ciblenderversion
 echo.BLENDERVERSION=%BLENDERVERSION% >>"%_ci_prop_file%"
-)
+
+:nociblenderversion
+
 echo.  Blender version: %BLENDERVERSION%
 
 if exist "%BLENDERHOME%\%BLENDERVERSION%\scripts\addons" set BLENDERADDONS=%BLENDERHOME%\%BLENDERVERSION%\scripts\addons
@@ -298,11 +311,26 @@ if "%BLENDERADDONS%" == "" (
   echo.  Blender addons not found
   goto endblender
 )
+if exist "%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons" goto APPDATABlenderAddon
+echo.WARNING!!! The APPDATA folder used by blender has not been generated
+echo.Use the plugin manager in blender to create the folder before 
+echo.using the install bat file.
+
+goto noAPPDATABlenderAddon
+
+:APPDATABlenderAddon
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
-if exist "%_ci_prop_file%" (
+
+:noAPPDATABlenderAddon
+if exist "%_ci_prop_file%" goto postCiBlenderAddon
+goto noCiBlenderAddon
+
+:postCiBlenderAddon
 echo.BLENDERADDONS=%BLENDERADDONS% >>"%_ci_prop_file%" 
 echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >>"%_ci_prop_file%" 
-)
+
+:noCiBlenderAddon
+
 echo.
 echo.  Global Blender addons: 
 echo.
@@ -323,22 +351,31 @@ rem *****************
 echo.
 echo.Setting Git Environment
 
-if exist %_git_path%\git.exe ( 
+if exist %_git_path%\git.exe goto gitset
+goto gitsearch
+
+:gitset 
   set GITHOME=%_git_path%
   goto gitfound
-)  
 
+:gitsearch
 if exist "%ProgramFiles32%\Git\bin\git.exe" set GITHOME=%ProgramFiles32%\Git\bin
 if exist "%ProgramFiles%\Git\bin\git.exe" set GITHOME=%ProgramFiles%\Git\bin
-if exist "%LOCALAPPDATA%\GitHub" (
-  for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
-)
+if exist "%LOCALAPPDATA%\GitHub" goto appdatagit
+goto noappdatagit
 
-if exist %_git_path%bin\git.exe ( 
-  set GITHOME=%_git_path%
-  if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
-  goto gitfound
-)   
+:appdatagit
+for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
+
+if exist %_git_path%bin\git.exe goto inigit
+goto noinigit
+
+:inigit 
+set GITHOME=%_git_path%
+if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
+goto gitfound
+
+:noinigit
 
 if "%GITHOME%" == "" (
   echo.  Git not found
@@ -351,9 +388,11 @@ echo.  Git home: %GITHOME%
 set _path=%GITHOME%;%_path%
 set git=%_git_path%bin\git.exe
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto cigit
+goto endgit
+
+:cigit
 echo.GITHOME=%GITHOME% >>"%_ci_prop_file%" 
-)
 
 :endgit
 
@@ -370,9 +409,12 @@ if "%NSISHOME%" == "" (
 echo.  NSIS home: %NSISHOME%
 set _path=%NSISHOME%;%_path%
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto cinsis
+goto endnsis
+
+:cinsis
 echo.NSISHOME=%NSISHOME% >>"%_ci_prop_file%" 
-)
+
 :endnsis
 
 :cmake
@@ -388,9 +430,11 @@ if "%CMAKEHOME%" == "" (
 echo.  CMake home: %CMAKEHOME%
 set _path=%CMAKEHOME%\bin;%_path%
 
-if exist "%_ci_prop_file%" (
-echo.CMAKEHOME=%CMAKEHOME% >>"%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cicmake
+goto endcmake
+
+:cicmake
+echo.CMAKEHOME=%CMAKEHOME% >>"%_ci_prop_file%"
 
 :endcmake
 
@@ -398,19 +442,18 @@ echo.CMAKEHOME=%CMAKEHOME% >>"%_ci_prop_file%"
 echo.
 echo.Setting 7-Zip Environment
 
-if exist "%_seven_zip%\7z.exe" ( 
-  set SEVENZIPHOME=%_seven_zip%
-  goto sevenzipfound
-)  
-
 if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
 if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
 
-if exist %_seven_zip%7z.exe ( 
+if exist %_seven_zip%7z.exe goto inisevenzip 
+goto noinisevenzip
+
+:inisevenzip
   set SEVENZIPHOME=%_seven_zip%
   if "%SEVENZIPHOME:~-1%"=="\" SET SEVENZIPHOME=%SEVENZIPHOME:~0,-1%
   goto sevenzipfound
-)   
+
+:noinisevenzip   
 
 if "%SEVENZIPHOME%" == "" ( 
   echo.  7-Zip not found
@@ -422,9 +465,12 @@ if "%SEVENZIPHOME%" == "" (
 echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto cisevenzip
+goto endsevenzip
+
+:cisevenzip
 echo.SEVENZIPHOME=%SEVENZIPHOME% >>"%_ci_prop_file%" 
-)
+
 :endsevenzip
 
 :pydevdebug
@@ -439,9 +485,12 @@ if "%PYDEVDEBUG%" == "" (
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
 
-if exist "%_ci_prop_file%" (
-echo.PYDEVDEBUG=%PYDEVDEBUG% >>"%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cipydevdebug
+goto endpydevdebug
+
+:cipydevdebug
+echo.PYDEVDEBUG=%PYDEVDEBUG% >>"%_ci_prop_file%"
+
 :endpydevdebug
 
 
@@ -464,9 +513,13 @@ if "%QTHOME%" == "" (
 )
 
 echo.  Qt home: %QTHOME%
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto ciqt
+goto nociqt
+
+:ciqt
 echo.QTHOME=%QTHOME% >>"%_ci_prop_file%" 
-)
+
+:nociqt
 
 for %%A in (Qt5.2.1\5.2.1,5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Qt\%%A" (
@@ -488,9 +541,13 @@ if "%QTVERSION%" == "" (
 
 echo.  Qt version: %QTVERSION%
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto ciqtversion
+goto nociqtversion
+
+:ciqtversion
 echo.QTVERSION=%QTVERSION% >>"%_ci_prop_file%" 
-)
+
+:nociqtversion
 
 if exist "%QTHOME%\Qt\%QTVERSION%\bin" (
   set QTDIR=%QTHOME%\Qt\%QTVERSION%
@@ -527,11 +584,14 @@ echo.  Qt directory: %QTDIR%
 echo.  Qt include: %QTINC%
 echo.  Qt Lib: %QTLIB%
 
-if exist "%_ci_prop_file%" (
-echo.QTDIR=%QTDIR% >>"%_ci_prop_file%"
-echo.QTINC=%QTDIR%\include >>"%_ci_prop_file%"
-echo.QTLIB=%QTDIR%\lib >>"%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto ciqtsets
+goto endqt
+
+:ciqtsets
+echo.%QTDIR%>>"%_ci_prop_file%"
+echo.%QTINC%>>"%_ci_prop_file%"
+echo.%QTLIB%>>"%_ci_prop_file%"
+
 :endqt
 
 
@@ -747,10 +807,12 @@ rem **************
 rem ** Includes **
 rem **************
 
-if exist "%_ci_prop_file%" (
+if exist "%_ci_prop_file%" goto ciincludes
+goto endincludes
+
+:ciincludes
 echo.INCLUDE=%_include% >>"%_ci_prop_file%"
 echo.LIB=%_lib% >>"%_ci_prop_file%"
-)
 
 :endincludes
 
@@ -760,9 +822,12 @@ rem **************
 
 :path
 set PATH=%_path%%PATH%
-if exist "%_ci_prop_file%" (
-echo."%PATH%">>"%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto cipath
+goto endpath
+
+:cipath
+echo.PATH=%PATH%>>"%_ci_prop_file%"
+
 :endpath
 
 :workfolder
