@@ -13,23 +13,23 @@ if not "%ProgramFiles(x86)%" == "" set ProgramFiles32=%ProgramFiles(x86)%
 set _work_folder=%HOMEDRIVE%%HOMEPATH%
 
 rem compilers
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_32=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008_64=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 9.0 2^> nul') do set _msvc2008=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 9.0\VC" set _msvc2008=%ProgramFiles32%\Microsoft Visual Studio 9.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_32=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010_64=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 10.0 2^> nul') do set _msvc2010=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 10.0\VC" set _msvc2010=%ProgramFiles32%\Microsoft Visual Studio 10.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_32=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_32=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012_64=%%B
-if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012_64=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VC7" /v 11.0 2^> nul') do set _msvc2012=%%B
+if exist "%ProgramFiles32%\Microsoft Visual Studio 11.0\VC" set _msvc2012=%ProgramFiles32%\Microsoft Visual Studio 11.0\VC
 
 
 rem MS_SDKs
@@ -48,8 +48,8 @@ rem programs
 FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\BlenderFoundation" /v Install_Dir 2^> nul') do set _blender=%%B
 
 rem utilities
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
-FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _auto_git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
+FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" /v InstallLocation 2^> nul') do set _git_path=%%B
 
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMake 2.8.9" /ve 2^> nul') do set _cmake=%%B
@@ -57,8 +57,8 @@ FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\Kitware\CMa
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 FOR /F "tokens=2*" %%A in ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\NSIS" /ve 2^> nul') do set _nsis_path=%%B
 
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
-FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _auto_seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\Wow6432Node\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
+FOR /F "tokens=2*" %%A IN ('reg.exe QUERY "HKLM\SOFTWARE\7-Zip" /v Path 2^> nul') do set _seven_zip=%%B
 
 rem Libraries
 
@@ -96,7 +96,7 @@ echo.Auto-detected Locations:
 rem Misc
 echo.  start=FOLDER            [default: %_work_folder%]
 echo.  arch=BITS               [default: %_arch_type%]
-echo.  ci_output=FILE		   [default: "%_ci_prop_file%"]
+echo.  ci_output=FILE		   [default: %_ci_prop_file%]
 
 rem Lang
 echo.Languages:
@@ -224,12 +224,14 @@ echo.  Architecture: %_arch_type% bit
 
 echo.
 echo.CI Output File:
+if exist "%_ci_prop_file%" goto postCiProp
+goto endsettings
 
-if exist "%_ci_prop_file%" (
-echo.  Using: "%_ci_prop_file%"
+:postCiProp
+echo.  Using: %_ci_prop_file%
 echo.  Clearing file.
-echo. > "%_ci_prop_file%"
-)
+echo. >"%_ci_prop_file%"
+
 
 :endsettings
 
@@ -242,9 +244,7 @@ rem *****************
 :python
 echo.
 echo.Setting Python Environment
-if exist "%_python_path%\python.exe" ( 
-goto pythonfound 
-)
+if exist "%_python_path%\python.exe" goto pythonfound
 echo.Python not found
 goto endpython
 
@@ -255,9 +255,12 @@ rem http://docs.python.org/using/cmdline.html#envvar-PYTHONPATH
 set PYTHONFOLDER=%_python_path%
 %_python_path%\python.exe -c "import sys; print(""  ""+sys.version)"
 
-if exist "%_ci_prop_file%" (
-echo.PYTHONFOLDER=%PYTHONFOLDER% >> "%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto postCiPython
+goto endpython
+
+:postCiPython
+echo.PYTHONFOLDER=%PYTHONFOLDER% >>"%_ci_prop_file%"
+
 
 :endpython
 
@@ -277,9 +280,13 @@ if "%BLENDERHOME%" == "" (
   goto endblender
 )
 set _path=%_blender%;%_path%
-if exist "%_ci_prop_file%" (
-echo.BLENDERHOME=%BLENDERHOME% >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto postCiBlender
+goto noCiBlender
+
+:postCiBlender
+echo.BLENDERHOME=%BLENDERHOME% >>"%_ci_prop_file%"
+
+:noCiBlender
 echo.  Blender home: %BLENDERHOME%
 
 for %%A in (2.62,2.63,2.64,2.65,2.66,2.67,2.68,2.69,2.70) do (
@@ -289,9 +296,14 @@ if "%BLENDERVERSION%" == "" (
   echo.  Blender version not found
   goto endblender
 )
-if exist "%_ci_prop_file%" (
-echo.BLENDERVERSION=%BLENDERVERSION% >> "%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto ciblenderversion
+goto nociblenderversion
+
+:ciblenderversion
+echo.BLENDERVERSION=%BLENDERVERSION% >>"%_ci_prop_file%"
+
+:nociblenderversion
+
 echo.  Blender version: %BLENDERVERSION%
 
 if exist "%BLENDERHOME%\%BLENDERVERSION%\scripts\addons" set BLENDERADDONS=%BLENDERHOME%\%BLENDERVERSION%\scripts\addons
@@ -299,11 +311,26 @@ if "%BLENDERADDONS%" == "" (
   echo.  Blender addons not found
   goto endblender
 )
+if exist "%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons" goto APPDATABlenderAddon
+echo.WARNING!!! The APPDATA folder used by blender has not been generated
+echo.Use the plugin manager in blender to create the folder before 
+echo.using the install bat file.
+
+goto noAPPDATABlenderAddon
+
+:APPDATABlenderAddon
 set APPDATABLENDERADDONS=%APPDATA%\Blender Foundation\Blender\%BLENDERVERSION%\scripts\addons
-if exist "%_ci_prop_file%" (
-echo.BLENDERADDONS=%BLENDERADDONS% >> "%_ci_prop_file%" 
-echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >> "%_ci_prop_file%" 
-)
+
+:noAPPDATABlenderAddon
+if exist "%_ci_prop_file%" goto postCiBlenderAddon
+goto noCiBlenderAddon
+
+:postCiBlenderAddon
+echo.BLENDERADDONS=%BLENDERADDONS% >>"%_ci_prop_file%" 
+echo.APPDATABLENDERADDONS=%APPDATABLENDERADDONS% >>"%_ci_prop_file%" 
+
+:noCiBlenderAddon
+
 echo.
 echo.  Global Blender addons: 
 echo.
@@ -324,22 +351,31 @@ rem *****************
 echo.
 echo.Setting Git Environment
 
-if exist %_git_path%\git.exe ( 
+if exist %_git_path%\git.exe goto gitset
+goto gitsearch
+
+:gitset 
   set GITHOME=%_git_path%
   goto gitfound
-)  
 
+:gitsearch
 if exist "%ProgramFiles32%\Git\bin\git.exe" set GITHOME=%ProgramFiles32%\Git\bin
 if exist "%ProgramFiles%\Git\bin\git.exe" set GITHOME=%ProgramFiles%\Git\bin
-if exist "%LOCALAPPDATA%\GitHub" (
-  for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
-)
+if exist "%LOCALAPPDATA%\GitHub" goto appdatagit
+goto noappdatagit
 
-if exist %_auto_git_path%bin\git.exe ( 
-  set GITHOME=%_auto_git_path%
-  if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
-  goto gitfound
-)   
+:appdatagit
+for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
+
+if exist %_git_path%bin\git.exe goto inigit
+goto noinigit
+
+:inigit 
+set GITHOME=%_git_path%
+if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
+goto gitfound
+
+:noinigit
 
 if "%GITHOME%" == "" (
   echo.  Git not found
@@ -350,10 +386,13 @@ if "%GITHOME%" == "" (
 
 echo.  Git home: %GITHOME%
 set _path=%GITHOME%;%_path%
+set git=%_git_path%bin\git.exe
 
-if exist "%_ci_prop_file%" (
-echo.GITHOME="%GITHOME%" >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cigit
+goto endgit
+
+:cigit
+echo.GITHOME=%GITHOME% >>"%_ci_prop_file%" 
 
 :endgit
 
@@ -370,9 +409,12 @@ if "%NSISHOME%" == "" (
 echo.  NSIS home: %NSISHOME%
 set _path=%NSISHOME%;%_path%
 
-if exist "%_ci_prop_file%" (
-echo.NSISHOME="%NSISHOME%" >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cinsis
+goto endnsis
+
+:cinsis
+echo.NSISHOME=%NSISHOME% >>"%_ci_prop_file%" 
+
 :endnsis
 
 :cmake
@@ -388,9 +430,11 @@ if "%CMAKEHOME%" == "" (
 echo.  CMake home: %CMAKEHOME%
 set _path=%CMAKEHOME%\bin;%_path%
 
-if exist "%_ci_prop_file%" (
-echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cicmake
+goto endcmake
+
+:cicmake
+echo.CMAKEHOME=%CMAKEHOME% >>"%_ci_prop_file%"
 
 :endcmake
 
@@ -398,19 +442,18 @@ echo.CMAKEHOME="%CMAKEHOME%" >> "%_ci_prop_file%"
 echo.
 echo.Setting 7-Zip Environment
 
-if exist "%_seven_zip%\7z.exe" ( 
-  set SEVENZIPHOME=%_seven_zip%
-  goto sevenzipfound
-)  
-
 if exist "%ProgramFiles32%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles32%\7-zip
 if exist "%ProgramFiles%\7-zip\7z.exe" set SEVENZIPHOME=%ProgramFiles%\7-zip
 
-if exist %_auto_seven_zip%7z.exe ( 
-  set SEVENZIPHOME=%_auto_seven_zip%
+if exist %_seven_zip%7z.exe goto inisevenzip 
+goto noinisevenzip
+
+:inisevenzip
+  set SEVENZIPHOME=%_seven_zip%
   if "%SEVENZIPHOME:~-1%"=="\" SET SEVENZIPHOME=%SEVENZIPHOME:~0,-1%
   goto sevenzipfound
-)   
+
+:noinisevenzip   
 
 if "%SEVENZIPHOME%" == "" ( 
   echo.  7-Zip not found
@@ -422,9 +465,12 @@ if "%SEVENZIPHOME%" == "" (
 echo.  7-Zip home: %SEVENZIPHOME%
 set _path=%SEVENZIPHOME%;%_path%
 
-if exist "%_ci_prop_file%" (
-echo.SEVENZIPHOME=%SEVENZIPHOME% >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cisevenzip
+goto endsevenzip
+
+:cisevenzip
+echo.SEVENZIPHOME=%SEVENZIPHOME% >>"%_ci_prop_file%" 
+
 :endsevenzip
 
 :pydevdebug
@@ -439,9 +485,12 @@ if "%PYDEVDEBUG%" == "" (
 )
 echo.  PyDev Debug home: %PYDEVDEBUG%
 
-if exist "%_ci_prop_file%" (
-echo.PYDEVDEBUG=%PYDEVDEBUG% >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto cipydevdebug
+goto endpydevdebug
+
+:cipydevdebug
+echo.PYDEVDEBUG=%PYDEVDEBUG% >>"%_ci_prop_file%"
+
 :endpydevdebug
 
 
@@ -464,9 +513,13 @@ if "%QTHOME%" == "" (
 )
 
 echo.  Qt home: %QTHOME%
-if exist "%_ci_prop_file%" (
-echo.QTHOME=%QTHOME% >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto ciqt
+goto nociqt
+
+:ciqt
+echo.QTHOME=%QTHOME% >>"%_ci_prop_file%" 
+
+:nociqt
 
 for %%A in (Qt5.2.1\5.2.1,5.1.1,4.8.5,4.7.4,4.7.3,4.7.2,4.7.1) do (
   if exist "%QTHOME%\Qt\%%A" (
@@ -488,9 +541,13 @@ if "%QTVERSION%" == "" (
 
 echo.  Qt version: %QTVERSION%
 
-if exist "%_ci_prop_file%" (
-echo.QTVERSION=%QTVERSION% >> "%_ci_prop_file%" 
-)
+if exist "%_ci_prop_file%" goto ciqtversion
+goto nociqtversion
+
+:ciqtversion
+echo.QTVERSION=%QTVERSION% >>"%_ci_prop_file%" 
+
+:nociqtversion
 
 if exist "%QTHOME%\Qt\%QTVERSION%\bin" (
   set QTDIR=%QTHOME%\Qt\%QTVERSION%
@@ -527,11 +584,14 @@ echo.  Qt directory: %QTDIR%
 echo.  Qt include: %QTINC%
 echo.  Qt Lib: %QTLIB%
 
-if exist "%_ci_prop_file%" (
-echo.QTDIR=%QTDIR% >> "%_ci_prop_file%"
-echo.QTINC=%QTDIR%\include >> "%_ci_prop_file%"
-echo.QTLIB=%QTDIR%\lib >> "%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto ciqtsets
+goto endqt
+
+:ciqtsets
+echo.%QTDIR%>>"%_ci_prop_file%"
+echo.%QTINC%>>"%_ci_prop_file%"
+echo.%QTLIB%>>"%_ci_prop_file%"
+
 :endqt
 
 
@@ -548,7 +608,7 @@ if "%QMAKEHOME%" == "" (
 echo.  QMAKE home: %QMAKEHOME%
 set _path=%QMAKEHOME%;%_path%
 if exist "%_ci_prop_file%" (
-echo.QMAKEHOME=%QMAKEHOME% >> "%_ci_prop_file%"
+echo.QMAKEHOME=%QMAKEHOME% >>"%_ci_prop_file%"
 )
 :endqmake
 
@@ -564,7 +624,7 @@ if "%SWIGHOME%" == "" (
 echo.  SWIG home: %SWIGHOME%
 set _path=%SWIGHOME%;%_path%
 if exist "%_ci_prop_file%" (
-echo.SWIGHOME=%SWIGHOME% >> "%_ci_prop_file%"
+echo.SWIGHOME=%SWIGHOME% >>"%_ci_prop_file%"
 )
 :endswig
 
@@ -580,7 +640,7 @@ if "%BOOST_INCLUDEDIR%" == "" (
 )
 echo.  BOOST Include Directory: %BOOST_INCLUDEDIR%
 if exist "%_ci_prop_file%" (
-echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >> "%_ci_prop_file%"
+echo.BOOST_INCLUDEDIR=%BOOST_INCLUDEDIR% >>"%_ci_prop_file%"
 )
 
 if exist "%_boostlib%" set BOOST_LIBRARYDIR=%_boostlib%
@@ -591,7 +651,7 @@ if "%BOOST_LIBRARYDIR%" == "" (
 set _path=%BOOST_LIBRARYDIR%;%_path%
 echo.  BOOST Library: %BOOST_LIBRARYDIR%
 if exist "%_ci_prop_file%" (
-echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >> "%_ci_prop_file%"
+echo.BOOST_LIBRARYDIR=%BOOST_LIBRARYDIR% >>"%_ci_prop_file%"
 )
 :endboost
 
@@ -604,7 +664,11 @@ rem ***************
 :compilers
 echo.
 echo.Setting Compiler Environment (%_compiler_type%, %_arch_type% bit)
+if "%_compiler_type%x%_arch_type%" == "x32" goto auto_set_compiler32
+if "%_compiler_type%x%_arch_type%" == "x64" goto auto_set_compiler64
 
+if "%_compiler_type%x%_arch_type%" == "msvc2012x32" goto msvc2012x32
+if "%_compiler_type%x%_arch_type%" == "msvc2012x64" goto msvc2012x64
 if "%_compiler_type%x%_arch_type%" == "msvc2010x32" goto msvc2010x32
 if "%_compiler_type%x%_arch_type%" == "msvc2010x64" goto msvc2010x64
 if "%_compiler_type%x%_arch_type%" == "msvc2008x32" goto msvc2008x32
@@ -618,6 +682,26 @@ if "%_compiler_type%x%_arch_type%" == "sdk70x64" goto sdk70x64
 if "%_compiler_type%x%_arch_type%" == "sdk71x32" goto sdk71x32
 if "%_compiler_type%x%_arch_type%" == "sdk71x64" goto sdk71x64
 goto compilernotfound
+
+:auto_set_compiler32
+if not "%_msvc2012%" == "" goto msvc2012x32
+if not "%_msvc2010%" == "" goto msvc2010x32
+if not "%_msvc2008%" == "" goto msvc2008x32
+
+:auto_set_compiler64
+if not "%_msvc2012%" == "" goto msvc2012x64
+if not "%_msvc2010%" == "" goto msvc2010x64
+if not "%_msvc2008%" == "" goto msvc2008x64
+
+:msvc2012x64
+if not exist "%_msvc2012%\bin\vcvars64.bat" goto compilernotfound
+call "%_msvc2012%\bin\vcvars64.bat"
+goto python_msvc
+
+:msvc2012x32
+if not exist "%_msvc2012%\bin\vcvars32.bat" goto compilernotfound
+call "%_msvc2012%\bin\vcvars32.bat"
+goto python_msvc
 
 :msvc2010x64
 if not exist "%_msvc2010%\bin\vcvars64.bat" goto compilernotfound
@@ -641,14 +725,14 @@ goto python_msvc
 
 :sdk60x32
 if not exist "%_ms_sdk_six%\vc\bin" goto compilernotfound
-set _path=%_ms_sdk_six%\vc\bin;%_path% 
+set _path="%_ms_sdk_six%\vc\bin";%_path% 
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib";%LIB% 
 goto python_msvc
 
 :sdk60x64
 if not exist "%_ms_sdk_six%\vc\bin\x64" goto compilernotfound
-set _path=%_ms_sdk_six%\vc\bin\x64;%_path%
+set _path="%_ms_sdk_six%\vc\bin\x64";%_path%
 set INCLUDE="%_ms_sdk_six%\vc\include";%INCLUDE%
 set LIB="%_ms_sdk_six%\vc\lib\x64";%LIB% 
 goto python_msvc
@@ -723,10 +807,12 @@ rem **************
 rem ** Includes **
 rem **************
 
-if exist "%_ci_prop_file%" (
-echo.INCLUDE=%_include% >> "%_ci_prop_file%"
-echo.LIB=%_lib% >> "%_ci_prop_file%"
-)
+if exist "%_ci_prop_file%" goto ciincludes
+goto endincludes
+
+:ciincludes
+echo.INCLUDE=%_include% >>"%_ci_prop_file%"
+echo.LIB=%_lib% >>"%_ci_prop_file%"
 
 :endincludes
 
@@ -735,10 +821,13 @@ rem ** Start-Up **
 rem **************
 
 :path
-set PATH=%_path%;%PATH%;
-if exist "%_ci_prop_file%" (
-echo.PATH=%_path%;%%PATH%% >> "%_ci_prop_file%"
-)
+set PATH=%_path%%PATH%
+if exist "%_ci_prop_file%" goto cipath
+goto endpath
+
+:cipath
+echo.PATH=%PATH%>>"%_ci_prop_file%"
+
 :endpath
 
 :workfolder
@@ -789,10 +878,10 @@ set _blender=
 set _python_path=
 
 set _git_path=
-set _auto_git_path=
+set _git_path=
 set _nsis_path=
 set _seven_zip=
-set _auto_seven_zip=
+set _seven_zip=
 set _cmake=
 set _pydev_debug=
 set _qmake=
