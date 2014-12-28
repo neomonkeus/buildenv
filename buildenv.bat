@@ -359,10 +359,15 @@ goto gitsearch
   goto gitfound
 
 :gitsearch
-if exist "%ProgramFiles32%\Git\bin\git.exe" set GITHOME=%ProgramFiles32%\Git\bin
-if exist "%ProgramFiles%\Git\bin\git.exe" set GITHOME=%ProgramFiles%\Git\bin
+if exist "%ProgramFiles32%\Git\bin\git.exe" (
+set GITHOME="%ProgramFiles32%\Git\bin"
+goto gitfound
+)
+if exist "%ProgramFiles%\Git\bin\git.exe" (
+set GITHOME="%ProgramFiles%\Git\bin"
+goto gitfound
+)
 if exist "%LOCALAPPDATA%\GitHub" goto appdatagit
-goto noappdatagit
 
 :appdatagit
 for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
