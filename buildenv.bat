@@ -351,7 +351,7 @@ rem *****************
 echo.
 echo.Setting Git Environment
 
-if exist %_git_path%\git.exe goto gitset
+if exist %_git_path%\bin\git.exe goto gitset
 goto gitsearch
 
 :gitset 
@@ -372,14 +372,6 @@ if exist "%LOCALAPPDATA%\GitHub" goto appdatagit
 :appdatagit
 for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
 
-if exist %_git_path%bin\git.exe goto inigit
-goto noinigit
-
-:inigit 
-set GITHOME=%_git_path%
-if "%GITHOME:~-1%"=="\" SET GITHOME=%GITHOME:~0,-1%
-goto gitfound
-
 :noinigit
 
 if "%GITHOME%" == "" (
@@ -388,10 +380,9 @@ if "%GITHOME%" == "" (
 )
 
 :gitfound
-
 echo.  Git home: %GITHOME%
-set _path=%GITHOME%;%_path%
-set git=%_git_path%bin\git.exe
+set _path=%GITHOME%;%_git_path%\usr\bin;%_path%
+set git=%_git_path%\bin\git.exe
 
 if exist "%_ci_prop_file%" goto cigit
 goto endgit
@@ -882,7 +873,6 @@ set _blender=
 
 set _python_path=
 
-set _git_path=
 set _git_path=
 set _nsis_path=
 set _seven_zip=
