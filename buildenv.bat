@@ -363,14 +363,15 @@ if exist "%ProgramFiles32%\Git\bin\git.exe" (
 set GITHOME="%ProgramFiles32%\Git\bin"
 goto gitfound
 )
+
 if exist "%ProgramFiles%\Git\bin\git.exe" (
 set GITHOME="%ProgramFiles%\Git\bin"
 goto gitfound
 )
-if exist "%LOCALAPPDATA%\GitHub" goto appdatagit
 
-:appdatagit
+if exist "%LOCALAPPDATA%\GitHub" (
 for /f "tokens=*" %%A in ('dir %LOCALAPPDATA%\GitHub\PortableGit_* /b') do set GITHOME=%LOCALAPPDATA%\GitHub\%%A
+)
 
 :noinigit
 
@@ -381,7 +382,7 @@ if "%GITHOME%" == "" (
 
 :gitfound
 echo.  Git home: %GITHOME%
-set _path=%GITHOME%;%_git_path%\usr\bin;%_path%
+set _path=%GITHOME%\bin;%GITHOME%\usr\bin;%_path%
 set git=%_git_path%\bin\git.exe
 
 if exist "%_ci_prop_file%" goto cigit
